@@ -30,7 +30,10 @@ nav ul li a {
 main {
     padding: 20px;
 }
-
+figure{
+    display: inline-block;
+    position: relative;
+}
 section {
     margin-bottom: 20px;
 }

@@ -4,26 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
-    
+    <link rel="stylesheet" href="/home/ash/portfolio/style.css">
 </head>
 <body>
-    <h1 id="main-heading">Welcome to My Portfolio</h1>
-    <img class="profile-picture" src="Images/ash.jpg" alt ="Profile Picture">
-    <h2>My Skills</h2>
-    <p>HTML</p>
-    <p>CSS</p>
-    <p>JavaScript</p>
-    <h2>My Social Media</h2>
-    <div class="social-media">
-        <a href="https://www.facebook.com" target="_blank">Facebook</a>
-        <a href="https://www.twitter.com" target="_blank">Twitter</a>
-        <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
-    </div>
-    <h2>General Info</h2>
-    <div class="general-info">
-        <a href="mailto:example@example.com">example@example.com</a>
-        <a href="tel:+1234567890">+1234567890</a>
-    </div>
+    <header>
+    <img src="/home/ash/Downloads/logo-ashim.png" attribute="logo" width="200" height="200">
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a><li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#social">Social Media</a><li>
+                <li><a href="#contact">Contact Me</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="about">
+            <h1>About Me</h1>
+            <img class="profile-picture" src="/home/ash/Downloads/ash.jpg" alt="profile-picture">
+            <p>I am Ashim Sapkota. A software developer with a strong passion for technology. With experience in HTML, JavaScript, and C++, I have the skills and dedication to tackle any challenge that comes my way. In my free time, I enjoy contributing to open-source projects and staying updated with the latest trends in the tech industry.</p>
+        </section>
+
+        <section id="projects">
+            <h1>Projects</h1>
+            <div class="project-container">
+                <h2>3D game DEAD SHOT with C++</h2>
+                <p>A game with a real time combat simulation which can be played with friends online by creating and joining the same lobby or you can play with anybody in the internet.</p>
+            </div>
+            <div class="project-container">
+                <h2>Inventory Manager</h2>
+                <p>A application to track and update your inventory with low stock notification and automated dealer purchase function</p>
+            </div>
+            <div class="project-container">
+                <h2>Finance Tracker</h2>
+                <p>A web application to keep record of your financial activities and shoe a detailed info of yor income and expenditure through a chart. </p>
+            </div>
+        </section>
+
+        <section id="skills">
+        <h1>Skills</h1>
+        <div class="skills-container">
+
+        </div>
+        <div class="skills-container">
+
+        </div>
+        <div class="skills-container">
+
+        </div>
+
+        </section>
+
+        <section id="social">
+        <h1>Social Media</h1>
+        <div class="social-container">
+
+
+        </div>
+        <div class="social-container">
+
+        </div>
+        <div class="social-container">
+
+        </div>
+
+        </section>
+
+
+
+        <section id="contact">
+            <h1>Contact Me</h1>
+            <form id="contact-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; Ashim Sapkota. All rights reserved.</p>
+    </footer>
+
+    <script src="/home/ash/portfolio/script.js"></script>
 </body>
 </html>

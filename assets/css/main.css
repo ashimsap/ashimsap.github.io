@@ -1,16 +1,6 @@
 @import url("fontawesome-all.min.css");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,300italic,400italic");
 
-/*
-	Alpha by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
-
-/* Reset */
-
-/* Based on meyerweb.com/eric/tools/css/reset (v2.0 | 20110126 | License: public domain) */
-
 	html, body, div, span, applet, object,
 	iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
 	pre, a, abbr, acronym, address, big, cite,
@@ -142,11 +132,12 @@
 
 	p {
 		margin: 0 0 2em 0;
+
 	}
 
 	h1, h2, h3, h4, h5, h6 {
 		color: #646464;
-		font-weight: 300;
+		font-weight: 400;
 		line-height: 1em;
 		margin: 0 0 0.5em 0;
 	}
@@ -157,7 +148,7 @@
 		}
 
 	h2 {
-		font-size: 2.25em;
+		font-size: 3em;
 		line-height: 1.5em;
 		letter-spacing: -0.035em;
 	}
@@ -3266,15 +3257,15 @@
 			-webkit-transition: opacity 0.2s ease-in-out;
 			-ms-transition: opacity 0.2s ease-in-out;
 			transition: opacity 0.2s ease-in-out;
-			opacity: 0.35;
+			opacity: 0.50;
 		}
 
 			#footer .icons a:hover {
-				opacity: 0.75;
+				opacity: 1;
 			}
 
 		#footer .copyright {
-			color: #999;
+			color: grey;
 			font-size: 0.9em;
 			line-height: 1em;
 			margin: 2em 0 0 0;

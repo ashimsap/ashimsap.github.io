@@ -30,16 +30,27 @@ class Homepage extends StatelessWidget {
               SidebarX(controller: SidebarXController(selectedIndex: 0),
               extendedTheme: SidebarXTheme(
                 width: 200,
-                hoverColor: Colors.red,
+                hoverColor: Colors.blueGrey,
                 iconTheme: IconThemeData(color: Colors.white),
                 textStyle: TextStyle(color: Colors.white),
+                selectedTextStyle: TextStyle(color: Colors.lightBlueAccent),
+                hoverTextStyle: TextStyle(color: Colors.blueGrey, fontSize: 18),
+                hoverIconTheme: IconThemeData(color: Colors.blueGrey, applyTextScaling: true),
+                selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent),
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.horizontal( right: Radius.circular(12))
                 ),
               ),
               theme: SidebarXTheme(
-                  iconTheme: IconThemeData(color: Colors.white),
+                hoverColor: Colors.blueGrey,
+                iconTheme: IconThemeData(color: Colors.white),
+                textStyle: TextStyle(color: Colors.white),
+                selectedTextStyle: TextStyle(color: Colors.lightBlueAccent),
+                hoverTextStyle: TextStyle(color: Colors.blueGrey),
+                hoverIconTheme: IconThemeData(color: Colors.blueGrey, applyTextScaling: true),
+                selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent),
                 decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.horizontal( right: Radius.circular(12))
@@ -52,9 +63,33 @@ class Homepage extends StatelessWidget {
               ],
               ),
               SizedBox(width: 10,),
-              Expanded(child: Container(
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
+                  children: [
+                    Container(
+                        color: Colors.transparent.withValues(alpha: 0.3),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text("This is the body",style: TextStyle(color: Colors.white),),
+                        )
+                    ),
+                    SizedBox(width: 20,),
+                    Container(
+                        color: Colors.transparent.withValues(alpha: 0.3),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text("This is the second body",style: TextStyle(color: Colors.white),),
+                        )
+                    ),
+                  ],
+                ),
+
+                  /*child: Container(
                // color: Colors.transparent.withValues(alpha: 0.2),
-                child: Center(child: Text("This is the body",style: TextStyle(color: Colors.white),)),))
+                child: Center(child: Text("This is the body",style: TextStyle(color: Colors.white),)),)*/
+              ),
             ],
           )
         ],

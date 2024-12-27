@@ -33,10 +33,10 @@ class Homepage extends StatelessWidget {
                 hoverColor: Colors.blueGrey,
                 iconTheme: IconThemeData(color: Colors.white),
                 textStyle: TextStyle(color: Colors.white),
-                selectedTextStyle: TextStyle(color: Colors.lightBlueAccent),
+                selectedTextStyle: TextStyle(color: Colors.lightBlueAccent, fontSize: 18),
                 hoverTextStyle: TextStyle(color: Colors.blueGrey, fontSize: 18),
-                hoverIconTheme: IconThemeData(color: Colors.blueGrey, applyTextScaling: true),
-                selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent),
+                hoverIconTheme: IconThemeData(color: Colors.blueGrey, size: 30),
+                selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent,size: 30),
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.2),
@@ -47,10 +47,10 @@ class Homepage extends StatelessWidget {
                 hoverColor: Colors.blueGrey,
                 iconTheme: IconThemeData(color: Colors.white),
                 textStyle: TextStyle(color: Colors.white),
-                selectedTextStyle: TextStyle(color: Colors.lightBlueAccent),
+                selectedTextStyle: TextStyle(color: Colors.lightBlueAccent, fontSize: 18),
                 hoverTextStyle: TextStyle(color: Colors.blueGrey),
-                hoverIconTheme: IconThemeData(color: Colors.blueGrey, applyTextScaling: true),
-                selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent),
+                hoverIconTheme: IconThemeData(color: Colors.blueGrey, size: 30),
+                selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent,size: 30),
                 decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.horizontal( right: Radius.circular(12))

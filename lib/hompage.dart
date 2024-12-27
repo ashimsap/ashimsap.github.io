@@ -32,11 +32,18 @@ class Homepage extends StatelessWidget {
                 width: 200,
                 hoverColor: Colors.red,
                 iconTheme: IconThemeData(color: Colors.white),
-                decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.2), borderRadius: BorderRadius.horizontal( right: Radius.circular(12)))
+                textStyle: TextStyle(color: Colors.white),
+                decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.horizontal( right: Radius.circular(12))
+                ),
               ),
               theme: SidebarXTheme(
                   iconTheme: IconThemeData(color: Colors.white),
-                decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.2), borderRadius: BorderRadius.horizontal( right: Radius.circular(12)))
+                decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.horizontal( right: Radius.circular(12))
+                ),
               ),
               items: [
                 SidebarXItem(icon: Icons.home, label: "H O M E"),

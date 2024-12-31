@@ -1,3 +1,4 @@
+import 'package:blurbox/blurbox.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 
@@ -68,20 +69,14 @@ class Homepage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
 
                   children: [
-                    Container(
-                        color: Colors.transparent.withValues(alpha: 0.3),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text("This is the body",style: TextStyle(color: Colors.white),),
-                        )
-                    ),
-                    SizedBox(width: 20,),
-                    Container(
-                        color: Colors.transparent.withValues(alpha: 0.3),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text("This is the second body",style: TextStyle(color: Colors.white),),
-                        )
+
+                    BlurBox(
+                      height: 150,
+                    width: 150,
+                    borderRadius: BorderRadius.circular(12),
+                    blur: 2,
+                        color: Colors.black.withValues(alpha: 0.2),
+                        child: Text("This is Blur Box",style: TextStyle(color: Colors.white),),
                     ),
                   ],
                 ),

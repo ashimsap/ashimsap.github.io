@@ -20,12 +20,12 @@ class Homepage extends StatelessWidget {
             ),
           ),
           // Transparent AppBar
-          AppBar(
+         /* AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             title: const Text('W    E    L   C    O   M    E',style: TextStyle(color: Colors.white),),
             centerTitle: true,
-          ),
+          ),*/
           Row(
             children: [
               SidebarX(controller: SidebarXController(selectedIndex: 0),
@@ -40,7 +40,7 @@ class Homepage extends StatelessWidget {
                 selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent,size: 30),
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.horizontal( right: Radius.circular(12))
                 ),
               ),
@@ -53,7 +53,7 @@ class Homepage extends StatelessWidget {
                 hoverIconTheme: IconThemeData(color: Colors.blueGrey, size: 30),
                 selectedIconTheme: IconThemeData(color: Colors.lightBlueAccent,size: 30),
                 decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.horizontal( right: Radius.circular(12))
                 ),
               ),
@@ -66,7 +66,7 @@ class Homepage extends StatelessWidget {
               SizedBox(width: 10,),
               Expanded(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
 
                   children: [
 

@@ -357,13 +357,10 @@ class _ProfileSection extends StatelessWidget {
                   ),
                 ],
                 // Fallback to icon if image is missing
-                // image: const DecorationImage(
-                //   image: AssetImage('assets/images/avatar.png'),
-                //   fit: BoxFit.cover,
-                // ),
-              ),
-              child: const Center(
-                child: Icon(Icons.person, size: 80, color: Colors.white24),
+                 image: const DecorationImage(
+                   image: AssetImage('assets/avatar.jpg'),
+                   fit: BoxFit.cover,
+                 ),
               ),
             )
             .animate()
@@ -486,11 +483,31 @@ class _GithubContributions extends StatelessWidget {
             ]
           ),
           padding: const EdgeInsets.all(16),
-          child: SvgPicture.network(
-            "https://ghchart.rshah.org/00F0FF/ashimsap",
-            placeholderBuilder: (context) => const Center(
-              child: CircularProgressIndicator(color: Color(0xFF00F0FF)),
-            ),
+          child: Image.network(
+            "https://grass-graph.moshimo.works/images/ashimsap.png?background=none",
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(color: Color(0xFF00F0FF)),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+               return Column(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   Icon(Icons.error_outline, color: Colors.white30, size: 40),
+                   SizedBox(height: 10),
+                   Text(
+                     "Could not load GitHub chart",
+                     style: GoogleFonts.robotoMono(color: Colors.white30, fontSize: 12),
+                   ),
+                   Text(
+                     "Try checking your connection or GitHub username",
+                     style: GoogleFonts.robotoMono(color: Colors.white12, fontSize: 10),
+                   ),
+                 ],
+               );
+            },
           ),
         ),
       ],

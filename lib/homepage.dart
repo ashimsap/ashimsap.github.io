@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sidebarx/sidebarx.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'github_contributions.dart';
 
@@ -16,11 +15,10 @@ class Homepage extends ConsumerStatefulWidget {
 }
 
 class _HomepageState extends ConsumerState<Homepage> {
-  final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _scrollController = ScrollController();
   final _key = GlobalKey<ScaffoldState>();
 
-  // Keys to track section positions
+  int _selectedIndex = 0;
   final _sectionKeys = [GlobalKey(), GlobalKey(), GlobalKey()];
   bool _isSyncing = false;
 
@@ -33,7 +31,6 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _controller.dispose();
     super.dispose();
   }
 
@@ -51,11 +48,7 @@ class _HomepageState extends ConsumerState<Homepage> {
       final box = context.findRenderObject() as RenderBox?;
       if (box == null) continue;
 
-      // Get position relative to the top of the screen
       final position = box.localToGlobal(Offset.zero);
-
-      // We want the section that is closest to the top (0)
-      // but biased slightly towards the one occupying the screen (dy <= 100)
       final diff = position.dy.abs();
 
       if (diff < minDiff) {
@@ -64,14 +57,15 @@ class _HomepageState extends ConsumerState<Homepage> {
       }
     }
 
-    if (_controller.selectedIndex != targetIndex) {
-      _controller.selectIndex(targetIndex);
+    if (_selectedIndex != targetIndex) {
+      setState(() => _selectedIndex = targetIndex);
     }
   }
 
   void _scrollTo(int index) {
     _isSyncing = true;
-    _controller.selectIndex(index);
+    setState(() => _selectedIndex = index);
+    
     final context = _sectionKeys[index].currentContext;
     if (context != null) {
       Scrollable.ensureVisible(
@@ -87,84 +81,19 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    final isSmallScreen = MediaQuery.of(context).size.width < 800;
-    _controller.setExtended(!isSmallScreen);
-
     return Scaffold(
       key: _key,
       backgroundColor: const Color(0xFF0A0A0A),
       body: Stack(
         children: [
-          // Background Elements
           const _BackgroundOrbs(),
-          
-          // Main Content
           Row(
             children: [
-              // Sidebar (Blended / Fluid)
-              SidebarX(
-                controller: _controller,
-                showToggleButton: false,
-                theme: SidebarXTheme(
-                  width: 70,
-                  // Transparent decoration to blend with background
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  itemPadding: const EdgeInsets.all(10),
-                  selectedItemPadding: const EdgeInsets.all(10),
-                  itemTextPadding: const EdgeInsets.only(left: 10),
-                  selectedItemTextPadding: const EdgeInsets.only(left: 10),
-                  textStyle: const TextStyle(color: Colors.white60),
-                  selectedTextStyle: const TextStyle(
-                      color: Color(0xFF00F0FF), fontWeight: FontWeight.bold),
-                  iconTheme: const IconThemeData(color: Colors.white60, size: 20),
-                  selectedIconTheme:
-                      const IconThemeData(color: Color(0xFF00F0FF), size: 24),
-                  itemDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  selectedItemDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    // More subtle active state for fluid look
-                    color: const Color(0xFF00F0FF).withValues(alpha: 0.1),
-                    border: Border.all(
-                        color: const Color(0xFF00F0FF).withValues(alpha: 0.3)),
-                  ),
-                ),
-                extendedTheme: const SidebarXTheme(
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                ),
-                // Center items vertically using a header spacer
-                headerBuilder: (context, extended) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.35, 
-                  );
-                },
-                items: [
-                  SidebarXItem(
-                    icon: Icons.person_outline,
-                    label: 'Profile',
-                    onTap: () => _scrollTo(0),
-                  ),
-                  SidebarXItem(
-                    icon: Icons.code_rounded,
-                    label: 'Projects',
-                    onTap: () => _scrollTo(1),
-                  ),
-                  SidebarXItem(
-                    icon: Icons.bar_chart_rounded,
-                    label: 'Skills',
-                    onTap: () => _scrollTo(2),
-                  ),
-                ],
+              // Correct side-by-side layout with custom nav
+              _CustomSideNav(
+                selectedIndex: _selectedIndex,
+                onItemSelected: _scrollTo,
               ),
-              
-              // Scrollable Content
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
@@ -181,8 +110,6 @@ class _HomepageState extends ConsumerState<Homepage> {
               ),
             ],
           ),
-
-          // Floating "Made with Flutter" Badge
           Positioned(
             bottom: 20,
             right: 20,
@@ -196,6 +123,140 @@ class _HomepageState extends ConsumerState<Homepage> {
     );
   }
 }
+
+
+// --- Custom Side Navigation ---
+
+class _CustomSideNav extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemSelected;
+
+  const _CustomSideNav({
+    required this.selectedIndex,
+    required this.onItemSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 800;
+    
+    return Container(
+      width: isSmallScreen ? 80 : 220,
+      color: Colors.transparent,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center, 
+        children: [
+          _NavItem(
+            icon: Icons.person_outline,
+            label: "Profile",
+            isSelected: selectedIndex == 0,
+            isCollapsed: isSmallScreen,
+            onTap: () => onItemSelected(0),
+          ),
+          const SizedBox(height: 20),
+          _NavItem(
+            icon: Icons.code_rounded,
+            label: "Projects",
+            isSelected: selectedIndex == 1,
+            isCollapsed: isSmallScreen,
+            onTap: () => onItemSelected(1),
+          ),
+          const SizedBox(height: 20),
+          _NavItem(
+            icon: Icons.bar_chart_rounded,
+            label: "Skills",
+            isSelected: selectedIndex == 2,
+            isCollapsed: isSmallScreen,
+            onTap: () => onItemSelected(2),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final bool isCollapsed;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.isCollapsed,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final activeColor = const Color(0xFF00F0FF);
+
+    Widget content = isCollapsed
+        ? Icon(
+            icon,
+            size: isSelected ? 32 : 24, 
+            color: isSelected ? activeColor : Colors.white60
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                icon,
+                size: isSelected ? 28 : 22, 
+                color: isSelected ? activeColor : Colors.white60
+              ),
+              const SizedBox(width: 15),
+              Text(
+                label,
+                style: GoogleFonts.robotoMono(
+                  color: isSelected ? activeColor : Colors.white60,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontSize: isSelected ? 16 : 14,
+                ),
+              ),
+            ],
+          );
+
+    Widget item = MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: 300.ms,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          // Decoration for the underline only
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: isSelected ? activeColor : Colors.transparent,
+                width: 3.0,
+              ),
+            ),
+          ),
+          child: Center(child: content),
+        ),
+      ),
+    );
+
+    // Apply the fluid, pulsing neon glow animation if selected
+    if (isSelected) {
+      item = item.animate(onPlay: (controller) => controller.repeat(reverse: true)).glow(
+        color: activeColor,
+        startRadius: 10.0,
+        endRadius: 25.0,
+        duration: 2.seconds,
+        curve: Curves.easeInOut,
+      );
+    }
+
+    return item;
+  }
+}
+
 
 // --- Background Animation ---
 

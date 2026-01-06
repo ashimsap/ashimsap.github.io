@@ -15,13 +15,13 @@ class _GithubContributionsState extends State<GithubContributions> {
   List<Map<String, dynamic>> _contributions = [];
   bool _isLoading = true;
   String? _error;
+  int _totalContributions = 0;
 
   // GitHub-like Constants
-  final double _squareSize = 10.0;
-  final double _gap = 3.0;
+  final double _squareSize = 12.0; 
+  final double _gap = 3.0; 
   
   // GitHub Dark Mode Colors
-  final Color _emptyColor = const Color(0xFF161B22);
   final List<Color> _levelColors = const [
     Color(0xFF161B22), // Level 0
     Color(0xFF0E4429), // Level 1
@@ -46,9 +46,17 @@ class _GithubContributionsState extends State<GithubContributions> {
          final data = json.decode(response.body);
          final List<dynamic> items = data['contributions'];
          
+         int total = 0;
+         final List<Map<String, dynamic>> parsed = [];
+         for(var item in items) {
+            total += (item['count'] as int);
+            parsed.add(item as Map<String, dynamic>);
+         }
+
          if (mounted) {
            setState(() {
-             _contributions = items.cast<Map<String, dynamic>>();
+             _contributions = parsed;
+             _totalContributions = total;
              _isLoading = false;
            });
          }
@@ -72,59 +80,119 @@ class _GithubContributionsState extends State<GithubContributions> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "CONTRIBUTIONS (LAST YEAR)", 
-          style: GoogleFonts.robotoMono(color: Colors.white54, fontSize: 12, letterSpacing: 2)
-        ),
-        const SizedBox(height: 15),
-        Container(
-          width: double.infinity, // Allow it to stretch to max width of parent
-          decoration: BoxDecoration(
-            color: const Color(0xFF0D1117), // GitHub canvas background
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: const Color(0xFF30363D)),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10)
-            ]
-          ),
-          padding: const EdgeInsets.all(16),
-          child: _isLoading 
-            ? const Center(child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: CircularProgressIndicator(color: Color(0xFF39D353)),
-              ))
-            : _error != null 
-              ? Center(child: Text(_error!, style: GoogleFonts.robotoMono(color: Colors.white30)))
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  reverse: true, // Start from the right (latest date)
-                  physics: const BouncingScrollPhysics(),
-                  child: _buildCalendar(),
-                ),
-        ),
-      ],
-    ).animate().fadeIn(delay: 900.ms).slideY(begin: 0.2);
+    // Exact height calculation with a small buffer for safety
+    // Header (20px) + 7 * (Square + Gap)
+    final double gridHeight = 20.0 + (7 * (_squareSize + _gap));
+
+    int totalWeeks = 53;
+    if (!_isLoading && _contributions.isNotEmpty) {
+       final firstDate = DateTime.parse(_contributions.first['date']);
+       int paddingCount = (firstDate.weekday != 7) ? firstDate.weekday : 0;
+       totalWeeks = ((_contributions.length + paddingCount) / 7).ceil();
+    }
+    
+    // Width calculation
+    final double contentWidth = 30.0 + 6.0 + (totalWeeks * (_squareSize + _gap)) + 32.0;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final containerWidth = (contentWidth > constraints.maxWidth) 
+            ? constraints.maxWidth 
+            : contentWidth;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, bottom: 10),
+              child: Text(
+                "$_totalContributions contributions in the last year", 
+                style: GoogleFonts.inter(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)
+              ),
+            ),
+            Container(
+              width: containerWidth,
+              decoration: BoxDecoration(
+                color: const Color(0xFF0D1117), 
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: const Color(0xFF30363D)),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: _isLoading 
+                ? SizedBox(height: gridHeight + 30, child: const Center(child: CircularProgressIndicator(color: Color(0xFF39D353))))
+                : _error != null 
+                  ? SizedBox(height: gridHeight + 30, child: Center(child: Text(_error!, style: GoogleFonts.robotoMono(color: Colors.white30))))
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // Labels + Grid Row
+                        SizedBox(
+                          height: gridHeight + 1.0, // +1px buffer to prevent sub-pixel overflow
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Sticky Day Labels
+                              SizedBox(
+                                width: 30,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                     const SizedBox(height: 20), // Matches grid header
+                                     _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
+                                     _DayLabel(label: "Mon", height: _squareSize, gap: _gap, visible: true),
+                                     _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
+                                     _DayLabel(label: "Wed", height: _squareSize, gap: _gap, visible: true),
+                                     _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
+                                     _DayLabel(label: "Fri", height: _squareSize, gap: _gap, visible: true),
+                                     _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 6), 
+                              
+                              // Scrollable Grid
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  reverse: true,
+                                  physics: const BouncingScrollPhysics(),
+                                  child: _buildCalendarGrid(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Legend
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("Less", style: GoogleFonts.inter(color: const Color(0xFF7D8590), fontSize: 12)),
+                            const SizedBox(width: 4),
+                            _LegendSquare(color: _levelColors[0]),
+                            _LegendSquare(color: _levelColors[1]),
+                            _LegendSquare(color: _levelColors[2]),
+                            _LegendSquare(color: _levelColors[3]),
+                            _LegendSquare(color: _levelColors[4]),
+                            const SizedBox(width: 4),
+                            Text("More", style: GoogleFonts.inter(color: const Color(0xFF7D8590), fontSize: 12)),
+                          ],
+                        )
+                      ],
+                    ),
+            ),
+          ],
+        ).animate().fadeIn(delay: 900.ms).slideY(begin: 0.2);
+      }
+    );
   }
 
-  Widget _buildCalendar() {
+  Widget _buildCalendarGrid() {
     if (_contributions.isEmpty) return const SizedBox();
 
     final firstDate = DateTime.parse(_contributions.first['date']);
-    
-    // GitHub grid logic:
-    // Rows = Days (0=Sun, 6=Sat) - but commonly displayed starting Mon or Sun.
-    // GitHub displays Sun at row 0.
-    
-    // Pad the start so the first date aligns with its correct weekday row.
-    // weekday: 1=Mon ... 7=Sun.
-    // We want Sun=0, Mon=1 ... Sat=6.
-    int paddingCount = 0;
-    if (firstDate.weekday != 7) {
-       // if Mon(1), we need 1 padding (Sun).
-       paddingCount = firstDate.weekday;
-    }
+    int paddingCount = (firstDate.weekday != 7) ? firstDate.weekday : 0;
     
     final paddedContributions = [
       ...List.generate(paddingCount, (_) => <String, dynamic>{'empty': true}),
@@ -133,129 +201,106 @@ class _GithubContributionsState extends State<GithubContributions> {
 
     final totalWeeks = (paddedContributions.length / 7).ceil();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Day Labels (Mon, Wed, Fri)
-            Column(
-              children: [
-                SizedBox(height: 20), // Top margin for month labels
-                _DayLabel(label: "Mon", height: _squareSize, gap: _gap, visible: true),
-                _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
-                _DayLabel(label: "Wed", height: _squareSize, gap: _gap, visible: true),
-                _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
-                _DayLabel(label: "Fri", height: _squareSize, gap: _gap, visible: true),
-              ],
-            ),
-            const SizedBox(width: 5),
-            
-            // Grid
-            SizedBox(
-              height: (_squareSize + _gap) * 7 + 20, // 7 rows + label row height
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: totalWeeks,
-                itemBuilder: (context, weekIndex) {
-                  final startIndex = weekIndex * 7;
-                  final endIndex = (startIndex + 7 > paddedContributions.length)
-                      ? paddedContributions.length
-                      : startIndex + 7;
-                  final weekDays = paddedContributions.sublist(startIndex, endIndex);
-                  
-                  // Month Label Logic
-                  String? monthLabel;
-                  bool showMonth = false;
-                  
-                  // Check if this week contains the 1st of a month
-                  for (var day in weekDays) {
-                    if (day['empty'] != true) {
-                      final d = DateTime.parse(day['date']);
-                      if (d.day == 1) {
-                         showMonth = true;
-                         monthLabel = _monthName(d.month);
-                         break;
-                      }
-                    }
-                  }
-                  // Also show label for the very first week if valid
-                  if (weekIndex == 0 && monthLabel == null) {
-                     for (var day in weekDays) {
-                        if (day['empty'] != true) {
-                           monthLabel = _monthName(DateTime.parse(day['date']).month);
-                           showMonth = true; 
-                           break;
-                        }
-                     }
-                  }
+    return SizedBox(
+      height: 20 + (7 * (_squareSize + _gap)) + 1.0, // Add buffer
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: totalWeeks,
+        itemBuilder: (context, weekIndex) {
+          final startIndex = weekIndex * 7;
+          final endIndex = (startIndex + 7 > paddedContributions.length)
+              ? paddedContributions.length
+              : startIndex + 7;
+          final weekDays = paddedContributions.sublist(startIndex, endIndex);
+          
+          String? monthLabel;
+          bool showMonth = false;
+          
+          for (var day in weekDays) {
+            if (day['empty'] != true) {
+              final d = DateTime.parse(day['date']);
+              if (d.day == 1) {
+                 showMonth = true;
+                 monthLabel = _monthName(d.month);
+                 break;
+              }
+            }
+          }
+          if (weekIndex == 0 && monthLabel == null && weekDays.isNotEmpty) {
+             for (var day in weekDays) {
+                if (day['empty'] != true) {
+                   monthLabel = _monthName(DateTime.parse(day['date']).month);
+                   showMonth = true; 
+                   break;
+                }
+             }
+          }
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Month Label
-                      Container(
-                        height: 20,
-                        width: _squareSize + _gap,
-                        alignment: Alignment.bottomLeft,
-                        child: showMonth 
-                          ? Text(monthLabel ?? "", 
-                              style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 9))
-                          : null,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Month Label
+              Container(
+                height: 20,
+                width: _squareSize, 
+                margin: EdgeInsets.only(right: _gap),
+                alignment: Alignment.bottomLeft, 
+                child: showMonth 
+                  ? Transform.translate(
+                      offset: const Offset(0, 4), 
+                      child: OverflowBox(
+                        maxWidth: 60,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          monthLabel ?? "", 
+                          style: GoogleFonts.inter(
+                            color: const Color(0xFF7D8590), 
+                            fontSize: 12, 
+                            fontWeight: FontWeight.w500,
+                            height: 1.0, // Force strict line height
+                          ),
+                          softWrap: false,
+                        ),
                       ),
-                      
-                      // Days
-                      ...weekDays.map((day) {
-                         if (day['empty'] == true) {
-                           return SizedBox(width: _squareSize, height: _squareSize + _gap);
-                         }
-                      
-                         final level = day['level'] as int;
-                         final color = _levelColors[level.clamp(0, 4)];
-
-                         return Tooltip(
-                           message: "${day['date']}: ${day['count']} contributions",
-                           waitDuration: const Duration(milliseconds: 500),
-                           child: Container(
-                             width: _squareSize,
-                             height: _squareSize,
-                             margin: EdgeInsets.only(bottom: _gap),
-                             decoration: BoxDecoration(
-                               color: color,
-                               borderRadius: BorderRadius.circular(2),
-                             ),
-                           ),
-                         );
-                      }),
-                    ],
-                  );
-                },
+                    )
+                  : null,
               ),
-            ),
-          ],
-        ),
-        
-        const SizedBox(height: 8),
-        
-        // Legend
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Less", style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 10)),
-            const SizedBox(width: 4),
-            _LegendSquare(color: _levelColors[0]),
-            _LegendSquare(color: _levelColors[1]),
-            _LegendSquare(color: _levelColors[2]),
-            _LegendSquare(color: _levelColors[3]),
-            _LegendSquare(color: _levelColors[4]),
-            const SizedBox(width: 4),
-            Text("More", style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 10)),
-          ],
-        )
-      ],
+              
+              // Days
+              ...weekDays.map((day) {
+                 if (day['empty'] == true) {
+                   return SizedBox(width: _squareSize, height: _squareSize + _gap);
+                 }
+              
+                 final level = day['level'] as int;
+                 final color = _levelColors[level.clamp(0, 4)];
+
+                 return Tooltip(
+                   message: "${day['date']}: ${day['count']} contributions",
+                   waitDuration: const Duration(milliseconds: 300),
+                   decoration: BoxDecoration(
+                     color: const Color(0xFF6E7681).withValues(alpha: 0.9), 
+                     borderRadius: BorderRadius.circular(4),
+                   ),
+                   textStyle: const TextStyle(color: Colors.white, fontSize: 12),
+                   child: Container(
+                     width: _squareSize,
+                     height: _squareSize,
+                     margin: EdgeInsets.only(bottom: _gap, right: _gap),
+                     decoration: BoxDecoration(
+                       color: color,
+                       borderRadius: BorderRadius.circular(2),
+                       border: level == 0 ? Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.5), width: 1) : null
+                     ),
+                   ),
+                 );
+              }),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -270,7 +315,7 @@ class _DayLabel extends StatelessWidget {
     required this.label, 
     required this.height, 
     required this.gap,
-    required this.visible
+    required this.visible,
   });
 
   @override
@@ -278,16 +323,11 @@ class _DayLabel extends StatelessWidget {
     return Container(
       height: height,
       margin: EdgeInsets.only(bottom: gap),
-      // To align with the grid rows, we need to skip rows 0 (Sun), 2 (Tue), 4 (Thu), 6 (Sat) 
-      // but in the calling code I'm handling positioning manually. 
-      // GitHub labels: Mon(row 1), Wed(row 3), Fri(row 5).
-      // Row 0 is Sun.
-      // So this widget will be used for specific rows.
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(right: 4),
+      // Align Center for better visual balance with the square
+      alignment: Alignment.centerRight, 
       child: visible ? Text(
         label,
-        style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 9),
+        style: GoogleFonts.inter(color: const Color(0xFF7D8590), fontSize: 10, height: 1.0),
       ) : null,
     );
   }
@@ -306,6 +346,9 @@ class _LegendSquare extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(2),
+        border: color == const Color(0xFF161B22) 
+           ? Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.5), width: 1) 
+           : null
       ),
     );
   }

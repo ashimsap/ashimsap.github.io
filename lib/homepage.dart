@@ -1,6 +1,4 @@
 import 'dart:ui';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:blurbox/blurbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -8,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'github_contributions.dart';
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -102,15 +101,15 @@ class _HomepageState extends ConsumerState<Homepage> {
           // Main Content
           Row(
             children: [
-              // Sidebar
+              // Sidebar (Blended / Fluid)
               SidebarX(
                 controller: _controller,
                 showToggleButton: false,
                 theme: SidebarXTheme(
                   width: 70,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.4),
-                    border: Border(right: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
+                  // Transparent decoration to blend with background
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
                   ),
                   margin: const EdgeInsets.all(10),
                   itemPadding: const EdgeInsets.all(10),
@@ -128,24 +127,24 @@ class _HomepageState extends ConsumerState<Homepage> {
                   ),
                   selectedItemDecoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
+                    // More subtle active state for fluid look
                     color: const Color(0xFF00F0FF).withValues(alpha: 0.1),
                     border: Border.all(
                         color: const Color(0xFF00F0FF).withValues(alpha: 0.3)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF00F0FF).withValues(alpha: 0.2),
-                        blurRadius: 10,
-                      )
-                    ]
                   ),
                 ),
-                extendedTheme: SidebarXTheme(
+                extendedTheme: const SidebarXTheme(
                   width: 200,
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.4),
-                    border: Border(right: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
+                    color: Colors.transparent,
                   ),
                 ),
+                // Center items vertically using a header spacer
+                headerBuilder: (context, extended) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.35, 
+                  );
+                },
                 items: [
                   SidebarXItem(
                     icon: Icons.person_outline,
@@ -430,7 +429,7 @@ class _ProfileSection extends StatelessWidget {
 
             const SizedBox(height: 50),
 
-            const _GithubContributions(),
+            const GithubContributions(),
 
             const SizedBox(height: 50),
 
@@ -454,340 +453,6 @@ class _ProfileSection extends StatelessWidget {
             ).animate().fadeIn(delay: 1000.ms).slideY(begin: 0.5),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _GithubContributions extends StatefulWidget {
-  const _GithubContributions();
-
-  @override
-  State<_GithubContributions> createState() => _GithubContributionsState();
-}
-
-class _GithubContributionsState extends State<_GithubContributions> {
-  // Using the public API from github-contributions-api.jogruber.de
-  // This helps us avoid CORS issues and needing a personal access token
-  List<Map<String, dynamic>> _contributions = [];
-  bool _isLoading = true;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchContributions();
-  }
-
-  Future<void> _fetchContributions() async {
-    try {
-      final response = await http.get(
-        Uri.parse('https://github-contributions-api.jogruber.de/v4/ashimsap?y=last')
-      );
-      
-      if (response.statusCode == 200) {
-         final data = json.decode(response.body);
-         // The API returns { "contributions": [ { "date": "...", "count": X, "level": Y }, ... ] }
-         final List<dynamic> items = data['contributions'];
-         
-         if (mounted) {
-           setState(() {
-             _contributions = items.cast<Map<String, dynamic>>();
-             _isLoading = false;
-           });
-         }
-      } else {
-        throw Exception("Failed to load");
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = "Could not fetch GitHub data";
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  // Helper to check if two dates are in the same month
-  bool _isSameMonth(DateTime d1, DateTime d2) {
-    return d1.year == d2.year && d1.month == d2.month;
-  }
-
-  String _monthName(int month) {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return months[month - 1];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "CONTRIBUTIONS (LAST YEAR)", 
-          style: GoogleFonts.robotoMono(color: Colors.white54, fontSize: 12, letterSpacing: 2)
-        ),
-        const SizedBox(height: 15),
-        Container(
-          constraints: const BoxConstraints(maxWidth: 900),
-          decoration: BoxDecoration(
-            color: const Color(0xFF0D1117), // GitHub dark background
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: const Color(0xFF30363D)),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10)
-            ]
-          ),
-          padding: const EdgeInsets.all(20),
-          child: _isLoading 
-            ? const Center(child: CircularProgressIndicator(color: Color(0xFF39D353)))
-            : _error != null 
-              ? Center(child: Text(_error!, style: GoogleFonts.robotoMono(color: Colors.white30)))
-              : LayoutBuilder(
-                builder: (context, constraints) {
-                  // We need to group flat list into weeks starting on Sunday.
-                  if (_contributions.isEmpty) return const SizedBox();
-
-                  final firstDate = DateTime.parse(_contributions.first['date']);
-                  
-                  // GitHub grid starts with Sunday at the top (index 0).
-                  // If firstDate is e.g. Wednesday (weekday 3), we need 3 padding items before it (Sun, Mon, Tue).
-                  // DateTime.weekday: Mon=1 ... Sun=7.
-                  // We want Sun=0, Mon=1 ... Sat=6.
-                  // So mapping:
-                  // Sun(7) -> 0 padding
-                  // Mon(1) -> 1 padding
-                  // ...
-                  // Sat(6) -> 6 padding
-                  
-                  int paddingCount = 0;
-                  if (firstDate.weekday != 7) {
-                    paddingCount = firstDate.weekday;
-                  }
-                  
-                  final paddedContributions = [
-                    ...List.generate(paddingCount, (_) => <String, dynamic>{'empty': true}),
-                    ..._contributions
-                  ];
-
-                  // Calculate chunks of weeks (7 days per week)
-                  final totalWeeks = (paddedContributions.length / 7).ceil();
-                  final gap = 3.0;
-                  
-                  // Calculate dynamic size based on available width, reserving space for labels
-                  final availableWidth = constraints.maxWidth - 30; // 30px for left labels
-                  final calculatedSize = (availableWidth - (totalWeeks - 1) * gap) / totalWeeks;
-                  final size = calculatedSize.clamp(4.0, 11.0);
-
-                  // Track placed month labels to avoid duplicates
-                  int lastLabelMonth = -1;
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // Graph with labels
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Day Labels Column (Mon, Wed, Fri)
-                          // In 7-row column: Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(height: size + gap + 20), // Top margin for month labels + Sun
-                              _DayLabel(label: "Mon", height: size, gap: gap), // Index 1
-                              SizedBox(height: size + gap), // Skip Tue
-                              _DayLabel(label: "Wed", height: size, gap: gap), // Index 3
-                              SizedBox(height: size + gap), // Skip Thu
-                              _DayLabel(label: "Fri", height: size, gap: gap), // Index 5
-                            ],
-                          ),
-                          const SizedBox(width: 5),
-                          
-                          // The Graph itself
-                          Expanded(
-                            child: SizedBox(
-                              height: (size + gap) * 8 + 20, // 7 rows + label row
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: totalWeeks,
-                                itemBuilder: (context, weekIndex) {
-                                  final startIndex = weekIndex * 7;
-                                  final endIndex = (startIndex + 7 > paddedContributions.length)
-                                      ? paddedContributions.length
-                                      : startIndex + 7;
-                                  final weekDays = paddedContributions.sublist(startIndex, endIndex);
-                                  
-                                  // Determine month label for this column
-                                  String? monthLabel;
-                                  
-                                  // Find the first *real* date in this week
-                                  DateTime? firstRealDateInWeek;
-                                  for (var day in weekDays) {
-                                    if (day['empty'] != true) {
-                                      firstRealDateInWeek = DateTime.parse(day['date']);
-                                      break;
-                                    }
-                                  }
-
-                                  // Logic: If this week contains the 1st day of a month (or close to it)
-                                  // AND we haven't labeled this month recently.
-                                  if (firstRealDateInWeek != null) {
-                                     // Check if any day in this week is the 1st of the month
-                                     // OR if it's the very first column and we want to show the starting month.
-                                     bool startOfMonthInWeek = false;
-                                     
-                                     // Check specifically if the month changed from the previous week
-                                     // But simpler: just check if 'day 1' exists in this week
-                                     for(var day in weekDays) {
-                                       if (day['empty'] != true) {
-                                         final d = DateTime.parse(day['date']);
-                                         if (d.day == 1) {
-                                           startOfMonthInWeek = true;
-                                           break;
-                                         }
-                                       }
-                                     }
-
-                                     // Special case: The very first column always gets a label
-                                     if (weekIndex == 0) {
-                                        monthLabel = _monthName(firstRealDateInWeek.month);
-                                        lastLabelMonth = firstRealDateInWeek.month;
-                                     } else if (startOfMonthInWeek) {
-                                        // Only show if we haven't just shown it (weeks can overlap months, but 1st is unique)
-                                        // Actually, if 1st is in this week, we definitely show it.
-                                        final m = firstRealDateInWeek.month; // This might be prev month if 1st is later in week
-                                        // Re-find the actual 1st day to get correct month
-                                        int targetMonth = m;
-                                        for(var day in weekDays) {
-                                          if (day['empty'] != true) {
-                                            final d = DateTime.parse(day['date']);
-                                            if (d.day == 1) targetMonth = d.month;
-                                          }
-                                        }
-                                        
-                                        if (targetMonth != lastLabelMonth) {
-                                          monthLabel = _monthName(targetMonth);
-                                          lastLabelMonth = targetMonth;
-                                        }
-                                     }
-                                  }
-
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // Month Label Row
-                                      SizedBox(
-                                        height: 20,
-                                        width: size + gap,
-                                        child: (monthLabel != null)
-                                          ? Text(monthLabel, 
-                                              overflow: TextOverflow.visible,
-                                              softWrap: false,
-                                              style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 10))
-                                          : null,
-                                      ),
-                                      
-                                      // The 7 boxes
-                                      ...weekDays.map((day) {
-                                         if (day['empty'] == true) {
-                                           return SizedBox(width: size, height: size + gap);
-                                         }
-                                      
-                                         final level = day['level'] as int;
-                                         Color color;
-                                         switch (level) {
-                                            case 1: color = const Color(0xFF0E4429); break;
-                                            case 2: color = const Color(0xFF006D32); break;
-                                            case 3: color = const Color(0xFF26A641); break;
-                                            case 4: color = const Color(0xFF39D353); break;
-                                            default: color = const Color(0xFF161B22);
-                                         }
-                  
-                                         return Tooltip(
-                                           message: "${day['date']}: ${day['count']} contributions",
-                                           waitDuration: const Duration(milliseconds: 500),
-                                           child: Container(
-                                             width: size,
-                                             height: size,
-                                             margin: EdgeInsets.only(bottom: gap),
-                                             decoration: BoxDecoration(
-                                               color: color,
-                                               borderRadius: BorderRadius.circular(2),
-                                             ),
-                                           ),
-                                         );
-                                      }),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      
-                      const SizedBox(height: 10),
-                      
-                      // Legend
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("Less", style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 10)),
-                          const SizedBox(width: 5),
-                          _LegendSquare(color: const Color(0xFF161B22)),
-                          _LegendSquare(color: const Color(0xFF0E4429)),
-                          _LegendSquare(color: const Color(0xFF006D32)),
-                          _LegendSquare(color: const Color(0xFF26A641)),
-                          _LegendSquare(color: const Color(0xFF39D353)),
-                          const SizedBox(width: 5),
-                          Text("More", style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 10)),
-                        ],
-                      )
-                    ],
-                  );
-                }
-              ),
-        ),
-      ],
-    ).animate().fadeIn(delay: 900.ms).slideY(begin: 0.2);
-  }
-}
-
-class _DayLabel extends StatelessWidget {
-  final String label;
-  final double height;
-  final double gap;
-
-  const _DayLabel({required this.label, required this.height, required this.gap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      margin: EdgeInsets.only(bottom: gap),
-      alignment: Alignment.centerLeft,
-      child: Text(
-        label,
-        style: GoogleFonts.roboto(color: const Color(0xFF8B949E), fontSize: 9),
-      ),
-    );
-  }
-}
-
-class _LegendSquare extends StatelessWidget {
-  final Color color;
-  const _LegendSquare({required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 10,
-      height: 10,
-      margin: const EdgeInsets.symmetric(horizontal: 2),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(2),
       ),
     );
   }

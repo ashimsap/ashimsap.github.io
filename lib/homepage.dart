@@ -244,10 +244,9 @@ class _NavItem extends StatelessWidget {
 
     // Apply the fluid, pulsing neon glow animation if selected
     if (isSelected) {
-      item = item.animate(onPlay: (controller) => controller.repeat(reverse: true)).glow(
-        color: activeColor,
-        startRadius: 10.0,
-        endRadius: 25.0,
+      item = item.animate(onPlay: (controller) => controller.repeat(reverse: true)).boxShadow(
+        begin: BoxShadow(color: activeColor.withValues(alpha: 0.5), blurRadius: 5, spreadRadius: -5, offset: const Offset(0, 5)),
+        end: BoxShadow(color: activeColor.withValues(alpha: 0.5), blurRadius: 20, spreadRadius: -2, offset: const Offset(0, 10)),
         duration: 2.seconds,
         curve: Curves.easeInOut,
       );

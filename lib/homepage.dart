@@ -372,11 +372,11 @@ class _HeroSection extends StatelessWidget {
                     children: [
                       _SocialLinkLarge(label: "GITHUB", url: "https://github.com/ashimsap"),
                       const SizedBox(height: 20),
-                      _SocialLinkLarge(label: "LINKEDIN", url: "https://www.linkedin.com/in/ashimsapkota"),
+                      _SocialLinkLarge(label: "LINKEDIN", url: "https://www.linkedin.com/in/ashim-sapkota-7792552a4/"),
                       const SizedBox(height: 20),
-                      _SocialLinkLarge(label: "GMAIL", url: "mailto:ashimsapkota1@gmail.com"),
+                      _SocialLinkLarge(label: "GMAIL", url: "mailto:ashimsap@gmail.com"),
                       const SizedBox(height: 20),
-                      _SocialLinkLarge(label: "FACEBOOK", url: "https://facebook.com/ashimsap"),
+                      _SocialLinkLarge(label: "FACEBOOK", url: "https://www.facebook.com/ashim.sapkota.21629"),
                     ],
                   ).animate().fadeIn(delay: 600.ms).slideX(begin: 0.2),
                 ),
@@ -432,8 +432,7 @@ class _ProjectsSection extends StatelessWidget {
         color: const Color(0xFFFF0055),
         url: "https://github.com/ashimsap/to_do",
         deviceType: DeviceType.mobile,
-        imageAsset: "assets/icons/todo.png", 
-        isIconMode: true, 
+        // No asset, will fallback to custom Generated UI
       ),
       _ProjectData(
         title: "Dummy App",
@@ -773,7 +772,7 @@ class _DeviceFrame extends StatelessWidget {
                     : const FlutterLogo(size: 80),
                 ),
               )
-            else
+            else if (asset != null)
               Image.asset(
                 asset!,
                 fit: BoxFit.cover,
@@ -782,6 +781,35 @@ class _DeviceFrame extends StatelessWidget {
                 errorBuilder: (c, o, s) => Container(
                   color: const Color(0xFF1A1A1A),
                   child: const Center(child: Icon(Icons.broken_image, color: Colors.white10)),
+                ),
+              )
+            else 
+              // GENERATED UI FALLBACK (For To-Do App)
+              Container(
+                color: const Color(0xFF151515),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Container(height: 20, width: 100, decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(4))),
+                    const SizedBox(height: 30),
+                    // Fake List Items
+                    for (int i=0; i<4; i++)
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 15),
+                        height: 40,
+                        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(8)),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            Container(width: 15, height: 15, decoration: BoxDecoration(border: Border.all(color: Colors.white24), shape: BoxShape.circle)),
+                            const SizedBox(width: 10),
+                            Container(width: 80, height: 8, decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(2))),
+                          ],
+                        ),
+                      )
+                  ],
                 ),
               ),
             

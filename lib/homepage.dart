@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'github_contributions.dart';
 
 // --- ENUMS ---
-enum DeviceType { mobile, laptop }
+enum DeviceType { mobile, laptop, mobileLandscape }
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -371,11 +371,11 @@ class _HeroSection extends StatelessWidget {
                     children: [
                       _SocialLinkLarge(label: "GITHUB", url: "https://github.com/ashimsap"),
                       const SizedBox(height: 20),
-                      _SocialLinkLarge(label: "LINKEDIN", url: "https://www.linkedin.com/in/ashim-sapkota-7792552a4/"),
+                      _SocialLinkLarge(label: "LINKEDIN", url: "https://www.linkedin.com/in/ashimsapkota"),
                       const SizedBox(height: 20),
-                      _SocialLinkLarge(label: "GMAIL", url: "mailto:ashimsap@gmail.com"),
+                      _SocialLinkLarge(label: "GMAIL", url: "mailto:ashimsapkota1@gmail.com"),
                       const SizedBox(height: 20),
-                      _SocialLinkLarge(label: "FACEBOOK", url: "https://www.facebook.com/ashim.sapkota.21629"),
+                      _SocialLinkLarge(label: "FACEBOOK", url: "https://facebook.com/ashimsap"),
                     ],
                   ).animate().fadeIn(delay: 600.ms).slideX(begin: 0.2),
                 ),
@@ -410,7 +410,7 @@ class _ProjectsSection extends StatelessWidget {
         details: "A custom Stream Deck alternative where the server runs on Manjaro Linux and the UI is controlled by a Flutter mobile client. It lets you trigger commands/actions on your computer from your phone using real-time WebSocket communication.",
         color: const Color(0xFF7000FF),
         url: "https://github.com/ashimsap/deck",
-        deviceType: DeviceType.laptop,
+        deviceType: DeviceType.mobileLandscape, // Changed to mobileLandscape
         imageAsset: "assets/ss/deck screenshot 1.jpg", 
       ),
       _ProjectData(
@@ -631,15 +631,36 @@ class _GodTierProjectCardState extends State<_GodTierProjectCard> {
                   textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
                 ),
                 const SizedBox(height: 20),
-                Text(
-                  widget.project.description,
-                  style: GoogleFonts.outfit(
-                    color: Colors.white60,
-                    fontSize: 18,
-                    height: 1.5,
+                
+                // Description and Hover-Revealed Details
+                AnimatedCrossFade(
+                  duration: 300.ms,
+                  crossFadeState: isHovered ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                  firstChild: Text(
+                    widget.project.description,
+                    style: GoogleFonts.outfit(
+                      color: Colors.white60,
+                      fontSize: 18,
+                      height: 1.5,
+                    ),
+                    textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
                   ),
-                  textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
+                  secondChild: Column(
+                    crossAxisAlignment: widget.isReversed ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.project.details,
+                        style: GoogleFonts.outfit(
+                          color: Colors.white, // Brighter text on hover
+                          fontSize: 16,
+                          height: 1.6,
+                        ),
+                        textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
+                      ),
+                    ],
+                  ),
                 ),
+
                 const SizedBox(height: 30),
                 Wrap(
                   alignment: widget.isReversed ? WrapAlignment.end : WrapAlignment.start,
@@ -659,30 +680,7 @@ class _GodTierProjectCardState extends State<_GodTierProjectCard> {
                 Row(
                   mainAxisAlignment: widget.isReversed ? MainAxisAlignment.end : MainAxisAlignment.start,
                   children: [
-                    // Button 1: READ MORE
-                    GestureDetector(
-                      onTap: _showDetails,
-                      child: AnimatedContainer(
-                        duration: 200.ms,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.05),
-                          border: Border.all(color: Colors.white24),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          "READ MORE",
-                          style: GoogleFonts.robotoMono(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    
-                    const SizedBox(width: 20),
-
-                    // Button 2: VIEW REPO
+                    // Button: VIEW REPO
                     GestureDetector(
                       onTap: () => widget.project.url != null ? launchUrl(Uri.parse(widget.project.url!)) : null,
                       child: AnimatedContainer(
@@ -738,16 +736,31 @@ class _DeviceFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = type == DeviceType.mobile;
+    final isLandscape = type == DeviceType.mobileLandscape;
+    final isLaptop = type == DeviceType.laptop;
+    
+    double width, height;
+    
+    if (isLandscape) {
+      width = 440;
+      height = 220;
+    } else if (isMobile) {
+      width = 220;
+      height = 440;
+    } else {
+      width = 500;
+      height = 320;
+    }
     
     Widget frame = Container(
-      width: isMobile ? 220 : 500,
-      height: isMobile ? 440 : 320,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: const Color(0xFF111111),
-        borderRadius: BorderRadius.circular(isMobile ? 32 : 12),
+        borderRadius: BorderRadius.circular(isLaptop ? 12 : 32),
         border: Border.all(
           color: const Color(0xFF222222), 
-          width: isMobile ? 8 : 12, 
+          width: isLaptop ? 12 : 8, 
         ),
         boxShadow: [
           BoxShadow(
@@ -759,7 +772,7 @@ class _DeviceFrame extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(isMobile ? 24 : 6),
+        borderRadius: BorderRadius.circular(isLaptop ? 6 : 24),
         child: Stack(
           children: [
             if (isIconMode)
@@ -834,7 +847,7 @@ class _DeviceFrame extends StatelessWidget {
       ),
     );
 
-    if (!isMobile) {
+    if (isLaptop) {
       frame = Column(
         mainAxisSize: MainAxisSize.min,
         children: [

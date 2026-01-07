@@ -39,6 +39,7 @@ class _GithubContributionsState extends State<GithubContributions> {
   Future<void> _fetchContributions() async {
     try {
       final response = await http.get(
+        // 'last' returns the last 365 days from TODAY.
         Uri.parse('https://github-contributions-api.jogruber.de/v4/ashimsap?y=last')
       );
       
@@ -48,6 +49,8 @@ class _GithubContributionsState extends State<GithubContributions> {
          
          int total = 0;
          final List<Map<String, dynamic>> parsed = [];
+         
+         // Parse and sort just in case, though API usually returns chronological
          for(var item in items) {
             total += (item['count'] as int);
             parsed.add(item as Map<String, dynamic>);
@@ -80,10 +83,9 @@ class _GithubContributionsState extends State<GithubContributions> {
 
   @override
   Widget build(BuildContext context) {
-    // Exact height calculation with a small buffer for safety
-    // Header (20px) + 7 * (Square + Gap)
     final double gridHeight = 20.0 + (7 * (_squareSize + _gap));
 
+    // Determine total weeks. If empty, default.
     int totalWeeks = 53;
     if (!_isLoading && _contributions.isNotEmpty) {
        final firstDate = DateTime.parse(_contributions.first['date']);
@@ -91,7 +93,6 @@ class _GithubContributionsState extends State<GithubContributions> {
        totalWeeks = ((_contributions.length + paddingCount) / 7).ceil();
     }
     
-    // Width calculation
     final double contentWidth = 30.0 + 6.0 + (totalWeeks * (_squareSize + _gap)) + 32.0;
 
     return LayoutBuilder(
@@ -126,9 +127,8 @@ class _GithubContributionsState extends State<GithubContributions> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        // Labels + Grid Row
                         SizedBox(
-                          height: gridHeight + 1.0, // +1px buffer to prevent sub-pixel overflow
+                          height: gridHeight + 1.0, 
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -138,7 +138,7 @@ class _GithubContributionsState extends State<GithubContributions> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                     const SizedBox(height: 20), // Matches grid header
+                                     const SizedBox(height: 20),
                                      _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
                                      _DayLabel(label: "Mon", height: _squareSize, gap: _gap, visible: true),
                                      _DayLabel(label: "", height: _squareSize, gap: _gap, visible: false),
@@ -155,7 +155,7 @@ class _GithubContributionsState extends State<GithubContributions> {
                               Expanded(
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
-                                  reverse: true,
+                                  reverse: true, // IMPORTANT: Shows latest data (right side) first
                                   physics: const BouncingScrollPhysics(),
                                   child: _buildCalendarGrid(),
                                 ),
@@ -194,15 +194,23 @@ class _GithubContributionsState extends State<GithubContributions> {
     final firstDate = DateTime.parse(_contributions.first['date']);
     int paddingCount = (firstDate.weekday != 7) ? firstDate.weekday : 0;
     
+    // Flattened list including padding at the START
     final paddedContributions = [
       ...List.generate(paddingCount, (_) => <String, dynamic>{'empty': true}),
       ..._contributions
     ];
 
+    // NOTE: The API returns data up to "yesterday" or "today" depending on timezone.
+    // If today's contribution is missing, it might be due to API cache or timezone lag.
+    // However, the grid is built from this list.
+    
+    // Check if we need padding at the END to fill the last week column?
+    // Not strictly necessary for display, but helps structure.
+    
     final totalWeeks = (paddedContributions.length / 7).ceil();
 
     return SizedBox(
-      height: 20 + (7 * (_squareSize + _gap)) + 1.0, // Add buffer
+      height: 20 + (7 * (_squareSize + _gap)) + 1.0, 
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -213,6 +221,7 @@ class _GithubContributionsState extends State<GithubContributions> {
           final endIndex = (startIndex + 7 > paddedContributions.length)
               ? paddedContributions.length
               : startIndex + 7;
+          
           final weekDays = paddedContributions.sublist(startIndex, endIndex);
           
           String? monthLabel;
@@ -246,21 +255,22 @@ class _GithubContributionsState extends State<GithubContributions> {
                 height: 20,
                 width: _squareSize, 
                 margin: EdgeInsets.only(right: _gap),
-                alignment: Alignment.bottomLeft, 
+                alignment: Alignment.bottomCenter, 
                 child: showMonth 
                   ? Transform.translate(
                       offset: const Offset(0, 4), 
                       child: OverflowBox(
                         maxWidth: 60,
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.center,
                         child: Text(
                           monthLabel ?? "", 
                           style: GoogleFonts.inter(
                             color: const Color(0xFF7D8590), 
                             fontSize: 12, 
                             fontWeight: FontWeight.w500,
-                            height: 1.0, // Force strict line height
+                            height: 1.0, 
                           ),
+                          textAlign: TextAlign.center,
                           softWrap: false,
                         ),
                       ),
@@ -276,9 +286,11 @@ class _GithubContributionsState extends State<GithubContributions> {
               
                  final level = day['level'] as int;
                  final color = _levelColors[level.clamp(0, 4)];
+                 final dateStr = day['date'];
+                 final count = day['count'];
 
                  return Tooltip(
-                   message: "${day['date']}: ${day['count']} contributions",
+                   message: "$dateStr: $count contributions",
                    waitDuration: const Duration(milliseconds: 300),
                    decoration: BoxDecoration(
                      color: const Color(0xFF6E7681).withValues(alpha: 0.9), 
@@ -323,7 +335,6 @@ class _DayLabel extends StatelessWidget {
     return Container(
       height: height,
       margin: EdgeInsets.only(bottom: gap),
-      // Align Center for better visual balance with the square
       alignment: Alignment.centerRight, 
       child: visible ? Text(
         label,

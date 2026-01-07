@@ -296,7 +296,7 @@ class _HeroSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "// FLUTTER DEVELOPER & ARCHITECT",
+                      "FLUTTER DEVELOPER & ARCHITECT",
                       style: GoogleFonts.robotoMono(
                         color: const Color(0xFF00F0FF),
                         fontSize: 14,

@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:blurbox/blurbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -545,194 +544,145 @@ class _GodTierProjectCard extends StatefulWidget {
 class _GodTierProjectCardState extends State<_GodTierProjectCard> {
   bool isHovered = false;
 
-  void _showDetails() {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: BlurBox(
-            blur: 20,
-            color: Colors.black.withValues(alpha: 0.9),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: widget.project.color.withValues(alpha: 0.5)),
-            padding: const EdgeInsets.all(40),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.project.title, style: GoogleFonts.syne(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20),
-                Text(widget.project.details, style: GoogleFonts.outfit(color: Colors.white70, fontSize: 18, height: 1.5)),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (widget.project.url != null)
-                      TextButton.icon(
-                        onPressed: () => launchUrl(Uri.parse(widget.project.url!)),
-                        icon: Icon(Icons.code, color: widget.project.color),
-                        label: Text("VIEW REPO", style: GoogleFonts.robotoMono(color: widget.project.color)),
-                      ),
-                    const SizedBox(width: 20),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("CLOSE", style: GoogleFonts.robotoMono(color: Colors.white54)),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector( // Added Gesture Detector here
-      onTap: _showDetails, // Trigger the dialog on click
-      child: MouseRegion(
-        onEnter: (_) => setState(() => isHovered = true),
-        onExit: (_) => setState(() => isHovered = false),
-        cursor: SystemMouseCursors.click, // Change cursor to indicate clickability
-        child: Row(
-          textDirection: widget.isReversed ? TextDirection.rtl : TextDirection.ltr,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // 1. The Visual (Device Frame)
-            Expanded(
-              flex: 6,
-              child: Center(
-                child: AnimatedScale(
-                  scale: isHovered ? 1.02 : 1.0,
-                  duration: 500.ms,
-                  curve: Curves.easeOutExpo,
-                  child: _DeviceFrame(
-                    asset: widget.project.imageAsset,
-                    type: widget.project.deviceType,
-                    accentColor: widget.project.color,
-                    isIconMode: widget.project.isIconMode,
-                  ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      child: Row(
+        textDirection: widget.isReversed ? TextDirection.rtl : TextDirection.ltr,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // 1. The Visual (Device Frame)
+          Expanded(
+            flex: 6,
+            child: Center(
+              child: AnimatedScale(
+                scale: isHovered ? 1.02 : 1.0,
+                duration: 500.ms,
+                curve: Curves.easeOutExpo,
+                child: _DeviceFrame(
+                  asset: widget.project.imageAsset,
+                  type: widget.project.deviceType,
+                  accentColor: widget.project.color,
+                  isIconMode: widget.project.isIconMode,
                 ),
               ),
             ),
-            
-            const SizedBox(width: 60),
+          ),
+          
+          const SizedBox(width: 60),
 
-            // 2. The Info
-            Expanded(
-              flex: 5,
-              child: Column(
-                crossAxisAlignment: widget.isReversed ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "0${widget.index + 1}",
-                    style: GoogleFonts.robotoMono(
-                      color: widget.project.color,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                    ),
+          // 2. The Info
+          Expanded(
+            flex: 5,
+            child: Column(
+              crossAxisAlignment: widget.isReversed ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "0${widget.index + 1}",
+                  style: GoogleFonts.robotoMono(
+                    color: widget.project.color,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    widget.project.title,
-                    style: GoogleFonts.syne(
-                      fontSize: 42,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      height: 1.0,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  widget.project.title,
+                  style: GoogleFonts.syne(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    height: 1.0,
+                  ),
+                  textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
+                ),
+                const SizedBox(height: 20),
+                
+                // Description and Hover-Revealed Details
+                AnimatedCrossFade(
+                  duration: 300.ms,
+                  crossFadeState: isHovered ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                  firstChild: Text(
+                    widget.project.description,
+                    style: GoogleFonts.outfit(
+                      color: Colors.white60,
+                      fontSize: 18,
+                      height: 1.5,
                     ),
                     textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
                   ),
-                  const SizedBox(height: 20),
-                  
-                  // Description and Hover-Revealed Details
-                  AnimatedCrossFade(
-                    duration: 300.ms,
-                    crossFadeState: isHovered ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                    firstChild: Text(
-                      widget.project.description,
-                      style: GoogleFonts.outfit(
-                        color: Colors.white60,
-                        fontSize: 18,
-                        height: 1.5,
-                      ),
-                      textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
-                    ),
-                    secondChild: Column(
-                      crossAxisAlignment: widget.isReversed ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.project.details,
-                          style: GoogleFonts.outfit(
-                            color: Colors.white, // Brighter text on hover
-                            fontSize: 16,
-                            height: 1.6,
-                          ),
-                          textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 30),
-                  Wrap(
-                    alignment: widget.isReversed ? WrapAlignment.end : WrapAlignment.start,
-                    spacing: 10,
-                    children: widget.project.tags.map((t) => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white12),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Text(t, style: GoogleFonts.robotoMono(color: Colors.white70, fontSize: 12)),
-                    )).toList(),
-                  ),
-                  const SizedBox(height: 40),
-                  
-                  // ACTION BUTTONS
-                  Row(
-                    mainAxisAlignment: widget.isReversed ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  secondChild: Column(
+                    crossAxisAlignment: widget.isReversed ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                     children: [
-                      // Button: VIEW REPO
-                      GestureDetector(
-                        onTap: () => widget.project.url != null ? launchUrl(Uri.parse(widget.project.url!)) : null,
-                        child: AnimatedContainer(
-                          duration: 200.ms,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: isHovered ? widget.project.color : Colors.transparent,
-                            border: Border.all(color: widget.project.color),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                "VIEW REPO",
-                                style: GoogleFonts.robotoMono(
-                                  color: isHovered ? Colors.black : widget.project.color,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Icon(Icons.arrow_outward, 
-                                   size: 16, 
-                                   color: isHovered ? Colors.black : widget.project.color),
-                            ],
-                          ),
+                      Text(
+                        widget.project.details,
+                        style: GoogleFonts.outfit(
+                          color: Colors.white, // Brighter text on hover
+                          fontSize: 16,
+                          height: 1.6,
                         ),
+                        textAlign: widget.isReversed ? TextAlign.right : TextAlign.left,
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+
+                const SizedBox(height: 30),
+                Wrap(
+                  alignment: widget.isReversed ? WrapAlignment.end : WrapAlignment.start,
+                  spacing: 10,
+                  children: widget.project.tags.map((t) => Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white12),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Text(t, style: GoogleFonts.robotoMono(color: Colors.white70, fontSize: 12)),
+                  )).toList(),
+                ),
+                const SizedBox(height: 40),
+                
+                // ACTION BUTTONS
+                Row(
+                  mainAxisAlignment: widget.isReversed ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  children: [
+                    // Button: VIEW REPO
+                    GestureDetector(
+                      onTap: () => widget.project.url != null ? launchUrl(Uri.parse(widget.project.url!)) : null,
+                      child: AnimatedContainer(
+                        duration: 200.ms,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isHovered ? widget.project.color : Colors.transparent,
+                          border: Border.all(color: widget.project.color),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "VIEW REPO",
+                              style: GoogleFonts.robotoMono(
+                                color: isHovered ? Colors.black : widget.project.color,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(Icons.arrow_outward, 
+                                 size: 16, 
+                                 color: isHovered ? Colors.black : widget.project.color),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

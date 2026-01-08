@@ -42,6 +42,10 @@ class _HomepageState extends ConsumerState<Homepage> {
     double minDiff = double.infinity;
     int targetIndex = 0;
 
+    // Use viewport height to check if a section is occupying the screen
+    final viewportHeight = MediaQuery.of(context).size.height;
+    final viewCenter = viewportHeight / 2;
+
     for (int i = 0; i < _sectionKeys.length; i++) {
       final key = _sectionKeys[i];
       final context = key.currentContext;
@@ -51,8 +55,18 @@ class _HomepageState extends ConsumerState<Homepage> {
       if (box == null) continue;
 
       final position = box.localToGlobal(Offset.zero);
-      final diff = position.dy.abs();
+      // We check if the section is covering the center of the screen
+      final top = position.dy;
+      final bottom = top + box.size.height;
 
+      // If the section covers the center point of the viewport
+      if (top <= viewCenter && bottom >= viewCenter) {
+          targetIndex = i;
+          break; // Found the section covering the center
+      }
+      
+      // Fallback: Closest to top if no section covers center (e.g. very top or bottom)
+      final diff = top.abs();
       if (diff < minDiff) {
         minDiff = diff;
         targetIndex = i;

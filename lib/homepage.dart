@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:blurbox/blurbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -544,6 +543,7 @@ class _GodTierProjectCard extends StatefulWidget {
 
 class _GodTierProjectCardState extends State<_GodTierProjectCard> {
   bool isHovered = false;
+  bool isButtonHovered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -650,7 +650,50 @@ class _GodTierProjectCardState extends State<_GodTierProjectCard> {
                   mainAxisAlignment: widget.isReversed ? MainAxisAlignment.end : MainAxisAlignment.start,
                   children: [
                     // Button: VIEW REPO
-                    _NeonButton(url: widget.project.url, color: widget.project.color),
+                    MouseRegion(
+                      onEnter: (_) => setState(() => isButtonHovered = true),
+                      onExit: (_) => setState(() => isButtonHovered = false),
+                      child: GestureDetector(
+                        onTap: () => widget.project.url != null ? launchUrl(Uri.parse(widget.project.url!)) : null,
+                        child: AnimatedContainer(
+                          duration: 200.ms,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: isHovered ? widget.project.color : Colors.transparent,
+                            border: Border.all(color: widget.project.color),
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: isButtonHovered ? [
+                               BoxShadow(
+                                 color: widget.project.color.withValues(alpha: 0.6),
+                                 blurRadius: 15,
+                                 spreadRadius: 2,
+                               ),
+                               BoxShadow(
+                                 color: widget.project.color.withValues(alpha: 0.3),
+                                 blurRadius: 30,
+                                 spreadRadius: 5,
+                               ),
+                            ] : [],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "VIEW REPO",
+                                style: GoogleFonts.robotoMono(
+                                  color: isHovered ? Colors.black : widget.project.color,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Icon(Icons.arrow_outward, 
+                                   size: 16, 
+                                   color: isHovered ? Colors.black : widget.project.color),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -661,86 +704,6 @@ class _GodTierProjectCardState extends State<_GodTierProjectCard> {
     );
   }
 }
-
-// Separate StatefulWidget for the Neon Button to handle its own hover state
-class _NeonButton extends StatefulWidget {
-  final String? url;
-  final Color color;
-
-  const _NeonButton({required this.url, required this.color});
-
-  @override
-  State<_NeonButton> createState() => _NeonButtonState();
-}
-
-class _NeonButtonState extends State<_NeonButton> {
-  bool isButtonHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => isButtonHovered = true),
-      onExit: (_) => setState(() => isButtonHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () => widget.url != null ? launchUrl(Uri.parse(widget.url!)) : null,
-        child: AnimatedContainer(
-          duration: 200.ms,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          decoration: BoxDecoration(
-            color: isButtonHovered ? widget.color.withValues(alpha: 0.1) : Colors.transparent, // Subtle fill on hover
-            border: Border.all(
-              color: isButtonHovered ? widget.color : widget.color.withValues(alpha: 0.5), // Brighter border on hover
-              width: 1.5, // Slightly thicker border
-            ),
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: isButtonHovered
-                ? [
-                    BoxShadow(
-                      color: widget.color.withValues(alpha: 0.6),
-                      blurRadius: 15,
-                      spreadRadius: 1,
-                    ),
-                    BoxShadow(
-                      color: widget.color,
-                      blurRadius: 4,
-                      spreadRadius: 0,
-                    ),
-                  ]
-                : [],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "VIEW REPO",
-                style: GoogleFonts.robotoMono(
-                  color: isButtonHovered ? Colors.white : widget.color, // White text on hover for contrast
-                  fontWeight: FontWeight.bold,
-                  shadows: isButtonHovered
-                      ? [
-                          Shadow(
-                            color: widget.color,
-                            blurRadius: 8,
-                          )
-                        ]
-                      : [],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Icon(
-                Icons.arrow_outward,
-                size: 16,
-                color: isButtonHovered ? Colors.white : widget.color,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 
 class _DeviceFrame extends StatelessWidget {
   final String? asset;

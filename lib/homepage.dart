@@ -423,7 +423,7 @@ class _ProjectsSection extends StatelessWidget {
         details: "A custom Stream Deck alternative where the server runs on Manjaro Linux and the UI is controlled by a Flutter mobile client. It lets you trigger commands/actions on your computer from your phone using real-time WebSocket communication.",
         color: const Color(0xFF7000FF),
         url: "https://github.com/ashimsap/deck",
-        deviceType: DeviceType.mobileLandscape, // Changed to mobileLandscape
+        deviceType: DeviceType.mobileLandscape,
         imageAsset: "assets/ss/deck screenshot 1.jpg", 
       ),
       _ProjectData(

@@ -68725,7 +68725,7 @@ s=B.i.cv(0.03)
 r=A.ep(20)
 q=A.jS(B.i.cv(0.05),1)
 p=t.E
-return A.af9(n,A.arZ(A.c9(o,A.e2(A.c([A.i4(A.c([A.cR("F1Soft International",o,A.Qd().$3$color$fontSize$fontWeight(B.i,24,B.al),o),A.cR("2023 - Present",o,A.jJ().$1$color(B.ee),o)],p),B.a8,B.qi,B.R,o),B.w9,A.cR("App Development Intern",o,A.jJ().$1$color(B.as),o),B.bA,A.cR("Contributing to the development of Nepal's leading fintech solutions. Bridging the gap between complex backend logic and fluid frontend experiences.",o,A.aeq().$3$color$fontSize$height(B.A,16,1.6),o)],p),B.a7,B.L,B.R),B.q,o,o,new A.bI(s,o,q,r,o,o,B.P),o,o,o,B.AS,o,o,o),new A.yi(10,10,o)))}}
+return A.af9(n,A.arZ(A.c9(o,A.e2(A.c([A.i4(A.c([A.cR("F1Soft International",o,A.Qd().$3$color$fontSize$fontWeight(B.i,24,B.al),o),A.cR("December 2025 - Present",o,A.jJ().$1$color(B.ee),o)],p),B.a8,B.qi,B.R,o),B.w9,A.cR("App Development Intern",o,A.jJ().$1$color(B.as),o),B.bA,A.cR("Contributing to the development of Nepal's leading fintech solutions. Bridging the gap between complex backend logic and fluid frontend experiences.",o,A.aeq().$3$color$fontSize$height(B.A,16,1.6),o)],p),B.a7,B.L,B.R),B.q,o,o,new A.bI(s,o,q,r,o,o,B.P),o,o,o,B.AS,o,o,o),new A.yi(10,10,o)))}}
 A.fF.prototype={
 aj(){return new A.Jb()}}
 A.Jb.prototype={

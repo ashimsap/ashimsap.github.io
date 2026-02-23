@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -464,7 +465,7 @@ class _ProjectsSection extends StatelessWidget {
         color: const Color(0xFF00FF9D),
         url: "https://github.com/ashimsap/pasal",
         deviceType: DeviceType.mobile,
-        imageAsset: "assets/ss/pasal1.jpg",
+        imageAssets: ["assets/ss/pasal1.jpg", "assets/ss/pasal2.jpg", "assets/ss/pasal3.jpg"],
       ),
     ];
 
@@ -573,7 +574,7 @@ class _GodTierProjectCardState extends State<_GodTierProjectCard> {
                 duration: 500.ms,
                 curve: Curves.easeOutExpo,
                 child: _DeviceFrame(
-                  asset: widget.project.imageAsset,
+                  assets: widget.project.imageAssets ?? (widget.project.imageAsset != null ? [widget.project.imageAsset!] : []),
                   type: widget.project.deviceType,
                   accentColor: widget.project.color,
                   isIconMode: widget.project.isIconMode,
@@ -715,24 +716,50 @@ class _GodTierProjectCardState extends State<_GodTierProjectCard> {
   }
 }
 
-class _DeviceFrame extends StatelessWidget {
-  final String? asset;
+class _DeviceFrame extends StatefulWidget {
+  final List<String> assets;
   final DeviceType type;
   final Color accentColor;
   final bool isIconMode;
 
   const _DeviceFrame({
-    required this.asset,
+    required this.assets,
     required this.type,
     required this.accentColor,
     this.isIconMode = false,
   });
 
   @override
+  State<_DeviceFrame> createState() => _DeviceFrameState();
+}
+
+class _DeviceFrameState extends State<_DeviceFrame> {
+  int _imageIndex = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.assets.length > 1) {
+      _timer = Timer.periodic(2.seconds, (timer) {
+        setState(() {
+          _imageIndex = (_imageIndex + 1) % widget.assets.length;
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isMobile = type == DeviceType.mobile;
-    final isLandscape = type == DeviceType.mobileLandscape;
-    final isLaptop = type == DeviceType.laptop;
+    final isMobile = widget.type == DeviceType.mobile;
+    final isLandscape = widget.type == DeviceType.mobileLandscape;
+    final isLaptop = widget.type == DeviceType.laptop;
     
     double width, height;
     
@@ -759,7 +786,7 @@ class _DeviceFrame extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: accentColor.withValues(alpha: 0.1),
+            color: widget.accentColor.withValues(alpha: 0.1),
             blurRadius: 60,
             spreadRadius: -10,
             offset: const Offset(0, 20),
@@ -770,27 +797,31 @@ class _DeviceFrame extends StatelessWidget {
         borderRadius: BorderRadius.circular(isLaptop ? 6 : 24),
         child: Stack(
           children: [
-            if (isIconMode)
-               Container(
+            if (widget.isIconMode)
+              Container(
                 color: const Color(0xFF050505),
                 child: Center(
-                  child: asset != null 
-                    ? Image.asset(asset!, width: 80, height: 80)
+                  child: widget.assets.isNotEmpty
+                    ? Image.asset(widget.assets.first, width: 80, height: 80)
                     : const FlutterLogo(size: 80),
                 ),
               )
-            else if (asset != null)
-              Image.asset(
-                asset!,
-                fit: BoxFit.cover,
-                width: double.infinity, 
-                height: double.infinity,
-                errorBuilder: (c, o, s) => Container(
-                  color: const Color(0xFF1A1A1A),
-                  child: const Center(child: Icon(Icons.broken_image, color: Colors.white10)),
+            else if (widget.assets.isNotEmpty)
+              AnimatedSwitcher(
+                duration: 500.ms,
+                child: Image.asset(
+                  widget.assets[_imageIndex],
+                  key: ValueKey<int>(_imageIndex),
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorBuilder: (c, o, s) => Container(
+                    color: const Color(0xFF1A1A1A),
+                    child: const Center(child: Icon(Icons.broken_image, color: Colors.white10)),
+                  ),
                 ),
               )
-            else 
+            else
               // GENERATED UI FALLBACK (For To-Do App)
               Container(
                 color: const Color(0xFF151515),
@@ -802,7 +833,7 @@ class _DeviceFrame extends StatelessWidget {
                     Container(height: 20, width: 100, decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(4))),
                     const SizedBox(height: 30),
                     // Fake List Items
-                    for (int i=0; i<4; i++)
+                    for (int i = 0; i < 4; i++)
                       Container(
                         margin: const EdgeInsets.only(bottom: 15),
                         height: 40,
@@ -1115,7 +1146,7 @@ class _FloatingBadge extends StatelessWidget {
         border: Border.all(color: Colors.white10),
       ),
       child: Row(children: [
-        const Icon(Icons.bolt, color: Color(0xFF00F0FF), size: 14),
+        const Icon(Icons.bolt, color: const Color(0xFF00F0FF), size: 14),
         const SizedBox(width: 6),
         Text("FLUTTER POWERED", style: GoogleFonts.robotoMono(color: Colors.white54, fontSize: 10)),
       ]),
@@ -1132,6 +1163,7 @@ class _ProjectData {
   final Color color;
   final String? url;
   final String? imageAsset;
+  final List<String>? imageAssets;
   final DeviceType deviceType;
   final bool isIconMode;
 
@@ -1143,6 +1175,7 @@ class _ProjectData {
     required this.color,
     this.url,
     this.imageAsset,
+    this.imageAssets,
     this.deviceType = DeviceType.mobile,
     this.isIconMode = false,
   });

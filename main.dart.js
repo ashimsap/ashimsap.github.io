@@ -21904,17 +21904,16 @@ _.e=b
 _.f=c
 _.a=d},
 KD:function KD(a){this.a=a},
-jy:function jy(a,b,c,d,e,f,g,h,i,j){var _=this
+jy:function jy(a,b,c,d,e,f,g,h,i){var _=this
 _.a=a
 _.b=b
 _.c=c
 _.d=d
 _.e=e
 _.f=f
-_.r=g
-_.w=h
-_.x=i
-_.y=j},
+_.w=g
+_.x=h
+_.y=i},
 aC2(){var s,r,q,p,o,n,m,l,k,j,i,h=null
 if($.ac==null){s=t.GA
 r=A.c([],s)
@@ -68572,7 +68571,7 @@ if(p)n.push(A.ox(A.alx(A.up(A.hq(A.e2(A.c([new A.l9("GITHUB","https://github.com
 return A.i4(n,B.a8,B.L,B.R,q)},
 $S:428}
 A.Mz.prototype={
-N(a){var s=null,r=t.s,q=A.c([new A.jy("Basobaas Map",A.c(["Flutter","Firebase","Mapbox"],r),"Nepal's premier map-based rental platform.","A completed Flutter + Firebase project for the Nepali market. Users can browse listings on a map, see rental places around them, and use a trust-based verification workflow (Phone + optional owner consent/OTP). It uses Mapbox for maps & location.",B.as,"https://github.com/ashimsap/basobaas_map","assets/ss/basobas ss 1.jpg",s,B.ca,!1),new A.jy("Stream Deck",A.c(["Linux","WebSocket","Dart"],r),"Custom hardware interface control.","A custom Stream Deck alternative where the server runs on Manjaro Linux and the UI is controlled by a Flutter mobile client. It lets you trigger commands/actions on your computer from your phone using real-time WebSocket communication.",B.eg,"https://github.com/ashimsap/deck","assets/ss/deck screenshot 1.jpg",s,B.kK,!1),new A.jy("Code Vault",A.c(["Server-Side Dart","LAN"],r),"Mobile-hosted snippet manager.","A code snippet vault where the mobile app itself hosts a server. You can connect over the local LAN from any browser and access your saved code snippets. It shows creative engineering by embedding local server logic inside a mobile app.",B.h0,"https://github.com/ashimsap/code_vault","assets/ss/codevault ss 1.jpg",s,B.ca,!1),new A.jy("To-Do App",A.c(["Flutter","Hive"],r),"Everyday productivity task manager.","A To-Do list application built using Flutter. It helps the user add, edit, mark complete/incomplete, and delete tasks. Uses local storage (Hive) and clean UI for task input and listing.",B.zh,"https://github.com/ashimsap/to_do",s,s,B.ca,!1),new A.jy("Dummy App",A.c(["R&D","Packages"],r),"Experimental sandbox.","A practice project and experimental app. It is a sandbox where I try new Flutter widgets, layouts, animations, or features. It demonstrates continuous learning and exploration of the framework.",B.G_,"https://github.com/ashimsap/dummy_app",s,s,B.ca,!0),new A.jy("Pasal",A.c(["Flutter","Firebase"],r),"Flutter eCommerce app with Firebase backend.","A Flutter-based eCommerce app targeting the Nepali market. Users can browse products, add to cart, and make purchases with real-time data sync using Firebase as the backend.",B.h0,"https://github.com/ashimsap/pasal",s,A.c(["assets/ss/pasal1.jpg","assets/ss/pasal2.jpg","assets/ss/pasal3.jpg"],r),B.ca,!1)],t.rO)
+N(a){var s=null,r=t.s,q=A.c([new A.jy("Basobaas Map",A.c(["Flutter","Firebase","Mapbox"],r),"Nepal's premier map-based rental platform.","A completed Flutter + Firebase project for the Nepali market. Users can browse listings on a map, see rental places around them, and use a trust-based verification workflow (Phone + optional owner consent/OTP). It uses Mapbox for maps & location.",B.as,"https://github.com/ashimsap/basobaas_map",A.c(["assets/ss/basobas1.jpg","assets/ss/basobas2.jpg"],r),B.ca,!1),new A.jy("Stream Deck",A.c(["Linux","WebSocket","Dart"],r),"Custom hardware interface control.","A custom Stream Deck alternative where the server runs on Manjaro Linux and the UI is controlled by a Flutter mobile client. It lets you trigger commands/actions on your computer from your phone using real-time WebSocket communication.",B.eg,"https://github.com/ashimsap/deck",A.c(["assets/ss/deck1.jpg","assets/ss/deck2.jpg"],r),B.kK,!1),new A.jy("Code Vault",A.c(["Server-Side Dart","LAN"],r),"Mobile-hosted snippet manager.","A code snippet vault where the mobile app itself hosts a server. You can connect over the local LAN from any browser and access your saved code snippets. It shows creative engineering by embedding local server logic inside a mobile app.",B.h0,"https://github.com/ashimsap/code_vault",A.c(["assets/ss/codevault1.jpg","assets/ss/codevault2.jpg"],r),B.ca,!1),new A.jy("To-Do App",A.c(["Flutter","Hive"],r),"Everyday productivity task manager.","A To-Do list application built using Flutter. It helps the user add, edit, mark complete/incomplete, and delete tasks. Uses local storage (Hive) and clean UI for task input and listing.",B.zh,"https://github.com/ashimsap/to_do",s,B.ca,!1),new A.jy("Dummy App",A.c(["R&D","Packages"],r),"Experimental sandbox.","A practice project and experimental app. It is a sandbox where I try new Flutter widgets, layouts, animations, or features. It demonstrates continuous learning and exploration of the framework.",B.G_,"https://github.com/ashimsap/dummy_app",s,B.ca,!0),new A.jy("Pasal",A.c(["Flutter","Firebase"],r),"Flutter eCommerce app with Firebase backend.","A Flutter-based eCommerce app targeting the Nepali market. Users can browse products, add to cart, and make purchases with real-time data sync using Firebase as the backend.",B.h0,"https://github.com/ashimsap/pasal",A.c(["assets/ss/pasal1.jpg","assets/ss/pasal2.jpg","assets/ss/pasal3.jpg"],r),B.ca,!1)],t.rO)
 r=A.cb(a,s,t.w).w
 return A.c9(s,A.e2(A.c([new A.r5("SELECTED WORKS",s),B.K4,A.auy(new A.aaQ(q),6,B.qD,new A.aaR(),!0)],t.E),B.a7,B.L,B.R),B.q,s,new A.ai(0,1/0,r.a.b,1/0),s,s,s,s,B.AR,s,s,s)}}
 A.aaR.prototype={
@@ -68588,11 +68587,8 @@ A.ny.prototype={
 aj(){return new A.KY()}}
 A.KY.prototype={
 N(a1){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e=this,d=null,c=e.a,b=c.e?B.a9:B.I,a=e.d?1.02:1,a0=A.bo(5e5,0)
-c=c.c
-s=c.w
-if(s==null){c=c.r
-s=t.s
-c=c!=null?A.c([c],s):A.c([],s)}else c=s
+c=c.c.w
+if(c==null)c=A.c([],t.s)
 s=e.a
 r=s.c
 q=r.e

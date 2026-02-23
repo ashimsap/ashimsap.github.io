@@ -940,7 +940,7 @@ class _GlassExperienceCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("F1Soft International", style: GoogleFonts.syne(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text("2023 - Present", style: GoogleFonts.robotoMono(color: Colors.white54)),
+                  Text("December 2025 - Present", style: GoogleFonts.robotoMono(color: Colors.white54)),
                 ],
               ),
               const SizedBox(height: 10),

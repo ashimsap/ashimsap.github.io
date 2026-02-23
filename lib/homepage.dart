@@ -456,6 +456,16 @@ class _ProjectsSection extends StatelessWidget {
         deviceType: DeviceType.mobile,
         isIconMode: true, 
       ),
+      _ProjectData(
+        title: "Pasal",
+        tags: ["Flutter", "Firebase"],
+        description: "Flutter eCommerce app with Firebase backend.",
+        details: "A Flutter-based eCommerce app targeting the Nepali market. Users can browse products, add to cart, and make purchases with real-time data sync using Firebase as the backend.",
+        color: const Color(0xFF00FF9D),
+        url: "https://github.com/ashimsap/pasal",
+        deviceType: DeviceType.mobile,
+        imageAsset: "assets/ss/pasal1.jpg",
+      ),
     ];
 
     return Container(

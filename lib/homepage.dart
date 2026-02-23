@@ -415,7 +415,7 @@ class _ProjectsSection extends StatelessWidget {
         color: const Color(0xFF00F0FF),
         url: "https://github.com/ashimsap/basobaas_map",
         deviceType: DeviceType.mobile,
-        imageAsset: "assets/ss/basobas ss 1.jpg", 
+        imageAssets: ["assets/ss/basobas1.jpg", "assets/ss/basobas2.jpg"],
       ),
       _ProjectData(
         title: "Stream Deck",
@@ -425,7 +425,7 @@ class _ProjectsSection extends StatelessWidget {
         color: const Color(0xFF7000FF),
         url: "https://github.com/ashimsap/deck",
         deviceType: DeviceType.mobileLandscape,
-        imageAsset: "assets/ss/deck screenshot 1.jpg", 
+        imageAssets: ["assets/ss/deck1.jpg", "assets/ss/deck2.jpg"],
       ),
       _ProjectData(
         title: "Code Vault",
@@ -435,7 +435,7 @@ class _ProjectsSection extends StatelessWidget {
         color: const Color(0xFF00FF9D),
         url: "https://github.com/ashimsap/code_vault",
         deviceType: DeviceType.mobile,
-        imageAsset: "assets/ss/codevault ss 1.jpg", 
+        imageAssets: ["assets/ss/codevault1.jpg", "assets/ss/codevault2.jpg"],
       ),
        _ProjectData(
         title: "To-Do App",

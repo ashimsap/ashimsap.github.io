@@ -356,7 +356,7 @@ class _HeroSection extends StatelessWidget {
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 600),
                       child: Text(
-                        "I build pixel-perfect, fluid mobile experiences. Currently crafting high-performance applications at F1Soft. Obsessed with micro-interactions and clean architecture.",
+                        "I build pixel-perfect, fluid mobile experiences. Crafted high-performance applications at F1Soft as intern. Obsessed with micro-interactions and clean architecture.",
                         style: GoogleFonts.outfit(
                           color: Colors.white60,
                           fontSize: 20,
@@ -940,7 +940,7 @@ class _GlassExperienceCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("F1Soft International", style: GoogleFonts.syne(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text("December 2025 - Present", style: GoogleFonts.robotoMono(color: Colors.white54)),
+                  Text("December 2025 - February 2026", style: GoogleFonts.robotoMono(color: Colors.white54)),
                 ],
               ),
               const SizedBox(height: 10),

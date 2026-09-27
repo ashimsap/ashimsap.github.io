@@ -109,7 +109,7 @@ class _LabCardState extends State<_LabCard> {
           children: [
             Wrap(
               alignment: WrapAlignment.spaceBetween,
-              crossAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 12,
               runSpacing: 6,
               children: [

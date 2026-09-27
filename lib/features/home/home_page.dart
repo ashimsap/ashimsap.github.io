@@ -19,8 +19,8 @@ class HomePage extends ConsumerWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 60,
-        vertical: isMobile ? 30 : 60,
+        horizontal: isMobile ? 16 : 60,
+        vertical: isMobile ? 24 : 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,27 +28,27 @@ class HomePage extends ConsumerWidget {
           // 1. HERO HEADER
           _buildHeroHeader(context, isMobile),
 
-          const SizedBox(height: 50),
+          const SizedBox(height: 40),
 
           // 2. BUILD / GROW / OPERATE GATEWAY TRIAD
           Text(
             "DIGITAL ECOSYSTEM",
             style: GoogleFonts.robotoMono(
               color: AppColors.textMuted,
-              fontSize: 13,
-              letterSpacing: 4,
+              fontSize: 12,
+              letterSpacing: 3,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           _buildGatewayCards(context, ref, isMobile),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
 
           // 3. GITHUB ACTIVITY GRAPH
           const GithubContributions(),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
 
           // 4. EXPERIENCE BRIEF
           _buildExperienceBrief(context, isMobile),
@@ -60,10 +60,19 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildHeroHeader(BuildContext context, bool isMobile) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final heroFontSize =
+        screenWidth < 360 ? 36.0 : (screenWidth < 480 ? 44.0 : (isMobile ? 56.0 : 84.0));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        // Responsive Header Badges (Wraps cleanly on narrow screens < 380px)
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 12,
+          runSpacing: 10,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -76,13 +85,12 @@ class HomePage extends ConsumerWidget {
                 "FLUTTER DEVELOPER & DIGITAL ARCHITECT",
                 style: GoogleFonts.robotoMono(
                   color: AppColors.cyan,
-                  fontSize: isMobile ? 10 : 12,
-                  letterSpacing: 2,
+                  fontSize: screenWidth < 360 ? 9 : (isMobile ? 10 : 12),
+                  letterSpacing: 1.5,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const Spacer(),
             // Floating Status Pill
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -92,6 +100,7 @@ class HomePage extends ConsumerWidget {
                 border: Border.all(color: Colors.white12),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 6,
@@ -115,31 +124,31 @@ class HomePage extends ConsumerWidget {
           ],
         ).animate().fadeIn(duration: 500.ms),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
 
         RichText(
           text: TextSpan(
             style: GoogleFonts.syne(
-              fontSize: isMobile ? 48 : 84,
+              fontSize: heroFontSize,
               fontWeight: FontWeight.w800,
               color: Colors.white,
               height: 0.95,
-              letterSpacing: -2,
+              letterSpacing: -1.5,
             ),
             children: [
               const TextSpan(text: "ASHIM\n"),
               TextSpan(
                 text: "SAPKOTA.",
                 style: GoogleFonts.syne(
-                  fontSize: isMobile ? 48 : 84,
+                  fontSize: heroFontSize,
                   fontWeight: FontWeight.w800,
                   color: Colors.transparent,
                   height: 0.95,
-                  letterSpacing: -2,
+                  letterSpacing: -1.5,
                 ).copyWith(
                   foreground: Paint()
                     ..style = PaintingStyle.stroke
-                    ..strokeWidth = 2
+                    ..strokeWidth = screenWidth < 360 ? 1.5 : 2.0
                     ..color = Colors.white.withValues(alpha: 0.4),
                 ),
               ),
@@ -147,7 +156,7 @@ class HomePage extends ConsumerWidget {
           ),
         ).animate().fadeIn(delay: 200.ms).moveY(begin: 15, end: 0),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
 
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
@@ -155,20 +164,20 @@ class HomePage extends ConsumerWidget {
             "Software builder crafting cross-platform applications with Flutter, digital marketer executing creative campaigns, and Linux/infrastructure explorer building toward DevOps.",
             style: GoogleFonts.outfit(
               color: AppColors.textSecondary,
-              fontSize: isMobile ? 16 : 19,
-              height: 1.6,
+              fontSize: screenWidth < 360 ? 14 : (isMobile ? 15 : 18),
+              height: 1.5,
               fontWeight: FontWeight.w300,
             ),
           ),
         ).animate().fadeIn(delay: 400.ms),
 
-        const SizedBox(height: 30),
+        const SizedBox(height: 24),
 
         // Social Link Buttons Row
         Wrap(
-          spacing: 12,
-          runSpacing: 10,
-          children: [
+          spacing: 10,
+          runSpacing: 8,
+          children: const [
             _SocialChip(
               label: "GitHub",
               icon: Icons.code,
@@ -180,7 +189,7 @@ class HomePage extends ConsumerWidget {
               url: "https://www.linkedin.com/in/ashim-sapkota-7792552a4/",
             ),
             _SocialChip(
-              label: "Contact Email",
+              label: "Email",
               icon: Icons.email_outlined,
               url: "mailto:ashimsap@gmail.com",
             ),
@@ -263,7 +272,7 @@ class HomePage extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
         Container(
-          padding: EdgeInsets.all(isMobile ? 20 : 32),
+          padding: EdgeInsets.all(isMobile ? 16 : 28),
           decoration: BoxDecoration(
             color: AppColors.cardBg,
             borderRadius: BorderRadius.circular(16),
@@ -273,8 +282,11 @@ class HomePage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 1. Enlighten Infosys
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 12,
+                runSpacing: 4,
                 children: [
                   Text(
                     "Enlighten Infosys",
@@ -313,13 +325,16 @@ class HomePage extends ConsumerWidget {
               ),
 
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: EdgeInsets.symmetric(vertical: 16),
                 child: Divider(color: Colors.white10),
               ),
 
               // 2. F1Soft International
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAlignment: WrapCrossAlignment.center,
+                spacing: 12,
+                runSpacing: 4,
                 children: [
                   Text(
                     "F1Soft International",
@@ -391,7 +406,7 @@ class _GatewayCardState extends State<_GatewayCard> {
         },
         child: AnimatedContainer(
           duration: 200.ms,
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: isHovered
                 ? color.withValues(alpha: 0.08)
@@ -420,17 +435,17 @@ class _GatewayCardState extends State<_GatewayCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(widget.item.icon,
-                      color: isHovered ? color : Colors.white60, size: 28),
+                      color: isHovered ? color : Colors.white60, size: 26),
                   Icon(Icons.arrow_forward_rounded,
                       color: isHovered ? color : Colors.white24, size: 18),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               Text(
                 widget.item.title,
                 style: GoogleFonts.syne(
                   color: isHovered ? color : Colors.white,
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   letterSpacing: -0.5,
                 ),
@@ -439,21 +454,21 @@ class _GatewayCardState extends State<_GatewayCard> {
                 widget.item.subtitle,
                 style: GoogleFonts.robotoMono(
                   color: color,
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               Text(
                 widget.item.description,
                 style: GoogleFonts.outfit(
                   color: AppColors.textSecondary,
-                  fontSize: 14,
+                  fontSize: 13,
                   height: 1.4,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               Wrap(
                 spacing: 6,
                 runSpacing: 6,
@@ -521,7 +536,7 @@ class _SocialChip extends StatelessWidget {
       onTap: () => launchUrl(Uri.parse(url)),
       borderRadius: BorderRadius.circular(30),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.04),
           borderRadius: BorderRadius.circular(30),
@@ -530,13 +545,13 @@ class _SocialChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 14, color: AppColors.cyan),
-            const SizedBox(width: 8),
+            Icon(icon, size: 13, color: AppColors.cyan),
+            const SizedBox(width: 6),
             Text(
               label,
               style: GoogleFonts.robotoMono(
                 color: Colors.white.withValues(alpha: 0.87),
-                fontSize: 12,
+                fontSize: 11,
               ),
             ),
           ],

@@ -18,18 +18,6 @@ class ProjectsData {
       status: "GitHub Repository",
     ),
     ProjectModel(
-      title: "Stream Deck",
-      tags: ["Linux", "WebSocket", "Dart"],
-      description: "Custom hardware interface control.",
-      details:
-          "A custom Stream Deck alternative where the server runs on Manjaro Linux and the UI is controlled by a Flutter mobile client. It lets you trigger commands/actions on your computer from your phone using real-time WebSocket communication.",
-      color: AppColors.purple,
-      url: "https://github.com/ashimsap/deck",
-      deviceType: DeviceFrameType.mobileLandscape,
-      imageAssets: ["assets/ss/deck1.jpg", "assets/ss/deck2.jpg"],
-      status: "GitHub Repository",
-    ),
-    ProjectModel(
       title: "Code Vault",
       tags: ["Server-Side Dart", "LAN"],
       description: "Mobile-hosted snippet manager.",
@@ -42,19 +30,15 @@ class ProjectsData {
       status: "GitHub Repository",
     ),
     ProjectModel(
-      title: "Pasal",
-      tags: ["Flutter", "Firebase"],
-      description: "eCommerce application with real-time sync.",
+      title: "Stream Deck",
+      tags: ["Linux", "WebSocket", "Dart"],
+      description: "Custom hardware interface control.",
       details:
-          "A Flutter-based eCommerce app targeting local online retail. Users can browse product categories, manage shopping cart state, and complete checkout flows with real-time data sync powered by Firebase.",
-      color: Color(0xFF00FF9D),
-      url: "https://github.com/ashimsap/pasal",
-      deviceType: DeviceFrameType.mobile,
-      imageAssets: [
-        "assets/ss/pasal1.jpg",
-        "assets/ss/pasal2.jpg",
-        "assets/ss/pasal3.jpg"
-      ],
+          "A custom Stream Deck alternative where the server runs on Arch Linux and the UI is controlled by a Flutter mobile client. It lets you trigger commands/actions on your computer from your phone using real-time WebSocket communication.",
+      color: AppColors.purple,
+      url: "https://github.com/ashimsap/deck",
+      deviceType: DeviceFrameType.mobileLandscape,
+      imageAssets: ["assets/ss/deck1.jpg", "assets/ss/deck2.jpg"],
       status: "GitHub Repository",
     ),
     ProjectModel(
@@ -79,6 +63,22 @@ class ProjectsData {
       deviceType: DeviceFrameType.mobile,
       isIconMode: true,
       status: "Prototype",
+    ),
+    ProjectModel(
+      title: "Pasal",
+      tags: ["Flutter", "Firebase"],
+      description: "eCommerce application with real-time sync.",
+      details:
+          "A Flutter-based eCommerce app targeting local online retail. Users can browse product categories, manage shopping cart state, and complete checkout flows with real-time data sync powered by Firebase.",
+      color: Color(0xFF00FF9D),
+      url: "https://github.com/ashimsap/pasal",
+      deviceType: DeviceFrameType.mobile,
+      imageAssets: [
+        "assets/ss/pasal1.jpg",
+        "assets/ss/pasal2.jpg",
+        "assets/ss/pasal3.jpg"
+      ],
+      status: "GitHub Repository",
     ),
   ];
 }

@@ -1,43 +1,106 @@
 import 'package:flutter/material.dart';
 
-enum MarketingCategory { seo, content, analytics, strategy, audience }
+enum GrowthStage { create, publish, promote, measure }
 
-class MarketingCaseStudy {
-  final String id;
-  final String title;
-  final MarketingCategory category;
-  final String objective;
-  final String approach;
-  final List<String> channels;
-  final List<String> tools;
-  final List<String> keyLearnings;
-  final List<String> metrics; // Real or structured placeholder labels
-  final Color accentColor;
+enum CreativeCategory {
+  graphics,
+  socialPosts,
+  reels,
+  videoEditing,
+  colorGrading,
+  metaAds,
+  email,
+  sms,
+}
 
-  const MarketingCaseStudy({
-    required this.id,
-    required this.title,
-    required this.category,
-    required this.objective,
-    required this.approach,
-    required this.channels,
-    required this.tools,
-    required this.keyLearnings,
-    required this.metrics,
-    this.accentColor = const Color(0xFF7000FF),
+class ProfessionalExperienceModel {
+  final String role;
+  final String company;
+  final String period; // "May 2026 – Present"
+  final String overview;
+  final Map<String, List<String>> capabilities;
+
+  const ProfessionalExperienceModel({
+    required this.role,
+    required this.company,
+    required this.period,
+    required this.overview,
+    required this.capabilities,
   });
 }
 
 class MarketingPillar {
   final String title;
+  final String categoryCode; // e.g. "DESIGN", "VIDEO", "SOCIAL", "PAID", "CAMPAIGNS", "ANALYTICS"
+  final GrowthStage stage;
   final String subtitle;
   final IconData icon;
-  final List<String> skills;
+  final List<String> toolsAndSkills;
 
   const MarketingPillar({
     required this.title,
+    required this.categoryCode,
+    required this.stage,
     required this.subtitle,
     required this.icon,
-    required this.skills,
+    required this.toolsAndSkills,
   });
+
+  String get stageLabel {
+    switch (stage) {
+      case GrowthStage.create:
+        return "CREATE";
+      case GrowthStage.publish:
+        return "PUBLISH";
+      case GrowthStage.promote:
+        return "PROMOTE";
+      case GrowthStage.measure:
+        return "MEASURE";
+    }
+  }
+}
+
+class CreativeArchiveItem {
+  final String id;
+  final String title;
+  final CreativeCategory category;
+  final String tool;
+  final String date;
+  final String contextCampaign;
+  final String role;
+  final String? previewAsset;
+  final String? kpiResults;
+
+  const CreativeArchiveItem({
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.tool,
+    required this.date,
+    required this.contextCampaign,
+    required this.role,
+    this.previewAsset,
+    this.kpiResults,
+  });
+
+  String get categoryLabel {
+    switch (category) {
+      case CreativeCategory.graphics:
+        return "GRAPHICS";
+      case CreativeCategory.socialPosts:
+        return "SOCIAL POST";
+      case CreativeCategory.reels:
+        return "REELS / SHORT VIDEO";
+      case CreativeCategory.videoEditing:
+        return "VIDEO EDITING";
+      case CreativeCategory.colorGrading:
+        return "COLOR GRADING";
+      case CreativeCategory.metaAds:
+        return "META ADS";
+      case CreativeCategory.email:
+        return "EMAIL CAMPAIGN";
+      case CreativeCategory.sms:
+        return "SMS MARKETING";
+    }
+  }
 }

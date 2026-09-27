@@ -50,7 +50,7 @@ class HomePage extends ConsumerWidget {
 
           const SizedBox(height: 60),
 
-          // 4. QUICK EXPERIENCE BRIEF
+          // 4. EXPERIENCE BRIEF
           _buildExperienceBrief(context, isMobile),
 
           const SizedBox(height: 40),
@@ -152,7 +152,7 @@ class HomePage extends ConsumerWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
           child: Text(
-            "Software builder crafting cross-platform applications with Flutter, exploring digital marketing growth loops, and actively mastering Linux, networking & DevOps infrastructure.",
+            "Software builder crafting cross-platform applications with Flutter, digital marketer executing creative campaigns, and Linux/infrastructure explorer building toward DevOps.",
             style: GoogleFonts.outfit(
               color: AppColors.textSecondary,
               fontSize: isMobile ? 16 : 19,
@@ -207,21 +207,21 @@ class HomePage extends ConsumerWidget {
         title: "GROW",
         subtitle: "DIGITAL MARKETING",
         description:
-            "SEO strategies, audience growth loops & technical content funnels.",
+            "Graphic design, short-form video editing, Meta ads & social campaigns.",
         color: AppColors.purple,
         icon: Icons.trending_up_rounded,
         targetIndex: 2,
-        tags: ["SEO", "GA4", "Content Strategy", "Funnel Analytics"],
+        tags: ["Graphic Design", "Meta Ads", "Reels", "Email / SMS"],
       ),
       _GatewayItem(
         title: "OPERATE",
-        subtitle: "DEVOPS JOURNEY",
+        subtitle: "DEVOPS & INFRASTRUCTURE",
         description:
-            "Linux workstations, GitHub Actions CI/CD pipelines & Docker automation.",
+            "Primary Linux workstation, self-hosted Jellyfin server & GitHub Actions.",
         color: AppColors.green,
         icon: Icons.terminal_rounded,
         targetIndex: 3,
-        tags: ["Linux", "Git", "CI/CD", "Docker", "Networking"],
+        tags: ["Linux", "Self-Hosting", "Nginx", "GitHub Actions"],
       ),
     ];
 
@@ -250,55 +250,115 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildExperienceBrief(BuildContext context, bool isMobile) {
-    return Container(
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
-      decoration: BoxDecoration(
-        color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "PROFESSIONAL EXPERIENCE SUMMARY",
+          style: GoogleFonts.robotoMono(
+            color: AppColors.textMuted,
+            fontSize: 12,
+            letterSpacing: 2,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          padding: EdgeInsets.all(isMobile ? 20 : 32),
+          decoration: BoxDecoration(
+            color: AppColors.cardBg,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 1. Enlighten Infosys
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Enlighten Infosys",
+                    style: GoogleFonts.syne(
+                      color: Colors.white,
+                      fontSize: isMobile ? 18 : 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "May 2026 – Present",
+                    style: GoogleFonts.robotoMono(
+                      color: AppColors.purple,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
               Text(
-                "F1Soft International",
-                style: GoogleFonts.syne(
-                  color: Colors.white,
-                  fontSize: isMobile ? 18 : 22,
-                  fontWeight: FontWeight.bold,
+                "Digital Marketing",
+                style: GoogleFonts.robotoMono(
+                  color: AppColors.purple,
+                  fontSize: 13,
                 ),
               ),
+              const SizedBox(height: 10),
               Text(
-                "Dec 2025 - Feb 2026",
+                "Graphic design (Canva, Photoshop), short-form reel video editing & color grading, Meta ads management, social platform scheduling, direct Email/SMS campaigns, and KPI analytics.",
+                style: GoogleFonts.outfit(
+                  color: AppColors.textSecondary,
+                  fontSize: 14,
+                  height: 1.5,
+                ),
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Divider(color: Colors.white10),
+              ),
+
+              // 2. F1Soft International
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "F1Soft International",
+                    style: GoogleFonts.syne(
+                      color: Colors.white,
+                      fontSize: isMobile ? 18 : 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "Dec 2025 - Feb 2026",
+                    style: GoogleFonts.robotoMono(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "App Development Intern",
                 style: GoogleFonts.robotoMono(
-                  color: AppColors.textMuted,
-                  fontSize: 12,
+                  color: AppColors.cyan,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Contributed to mobile fintech workflows in Nepal. Worked on bridging backend service endpoints with responsive, fluid mobile UI components.",
+                style: GoogleFonts.outfit(
+                  color: AppColors.textSecondary,
+                  fontSize: 14,
+                  height: 1.5,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          Text(
-            "App Development Intern",
-            style: GoogleFonts.robotoMono(
-              color: AppColors.cyan,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            "Contributed to mobile fintech workflows in Nepal. Worked on bridging backend service endpoints with responsive, fluid mobile UI components.",
-            style: GoogleFonts.outfit(
-              color: AppColors.textSecondary,
-              fontSize: 15,
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

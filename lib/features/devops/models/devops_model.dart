@@ -2,9 +2,27 @@ import 'package:flutter/material.dart';
 
 enum DevOpsStatus { active, learning, exploring, built, inProgress, planned }
 
+class SelfHostedProjectModel {
+  final String title;
+  final String subtitle;
+  final String description;
+  final List<String> technologies;
+  final List<String> architectureSteps;
+  final String workflowNote;
+
+  const SelfHostedProjectModel({
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.technologies,
+    required this.architectureSteps,
+    required this.workflowNote,
+  });
+}
+
 class DevOpsTopic {
   final String title;
-  final String category; // e.g. "Infrastructure", "CI/CD", "OS & Terminal", "Networking"
+  final String category;
   final DevOpsStatus status;
   final String description;
   final IconData icon;

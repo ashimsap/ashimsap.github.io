@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'homepage.dart';
+import 'app/app.dart';
+import 'core/theme/app_colors.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -14,18 +15,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ashim Sapkota',
+      title: 'Ashim Sapkota | BUILD • GROW • OPERATE',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(useMaterial3: true).copyWith(
-        scaffoldBackgroundColor: const Color(0xFF0A0A0A),
+        scaffoldBackgroundColor: AppColors.background,
         textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme),
-        colorScheme: ColorScheme.dark(
-          primary: const Color(0xFF00F0FF), // Cyberpunk Cyan
-          secondary: const Color(0xFF7000FF), // Neon Purple
-          surface: const Color(0xFF1A1A1A),
+        colorScheme: const ColorScheme.dark(
+          primary: AppColors.cyan,
+          secondary: AppColors.purple,
+          surface: AppColors.surface,
         ),
       ),
-      home: const Homepage(),
+      home: const MainAppShell(),
     );
   }
 }

@@ -13,14 +13,15 @@ class DevOpsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     final jellyfin = DevOpsData.jellyfinProject;
     final topics = DevOpsData.topics;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 60,
-        vertical: isMobile ? 30 : 60,
+        horizontal: isMobile ? 16 : 60,
+        vertical: isMobile ? 24 : 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +30,7 @@ class DevOpsPage extends StatelessWidget {
             "OPERATE // DEVOPS & INFRASTRUCTURE",
             style: GoogleFonts.robotoMono(
               color: AppColors.green,
-              fontSize: 13,
+              fontSize: 12,
               letterSpacing: 3,
               fontWeight: FontWeight.bold,
             ),
@@ -38,7 +39,7 @@ class DevOpsPage extends StatelessWidget {
           Text(
             "SYSTEMS, NETWORKING & SELF-HOSTING",
             style: GoogleFonts.syne(
-              fontSize: isMobile ? 28 : 42,
+              fontSize: screenWidth < 360 ? 24 : (isMobile ? 28 : 42),
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: -1,
@@ -49,20 +50,20 @@ class DevOpsPage extends StatelessWidget {
             "Building toward DevOps through hands-on personal infrastructure projects, Linux server administration, Nginx reverse proxies, and CI/CD pipelines.",
             style: GoogleFonts.outfit(
               color: AppColors.textSecondary,
-              fontSize: 16,
+              fontSize: screenWidth < 360 ? 14 : 16,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 36),
 
           // 1. SELF-HOSTED INFRASTRUCTURE CASE STUDY (Jellyfin Server)
           _buildJellyfinCard(context, jellyfin, isMobile),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 36),
 
           // 2. PORTFOLIO CI/CD PIPELINE CARD
           _buildPipelineCard(context, isMobile),
 
-          const SizedBox(height: 50),
+          const SizedBox(height: 40),
 
           // 3. INFRASTRUCTURE & LEARNING ROADMAP
           Text(
@@ -85,7 +86,7 @@ class DevOpsPage extends StatelessWidget {
             },
           ),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
         ],
       ),
     );
@@ -94,7 +95,7 @@ class DevOpsPage extends StatelessWidget {
   Widget _buildJellyfinCard(
       BuildContext context, SelfHostedProjectModel project, bool isMobile) {
     return Container(
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
+      padding: EdgeInsets.all(isMobile ? 16 : 32),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(20),
@@ -110,7 +111,11 @@ class DevOpsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -123,21 +128,25 @@ class DevOpsPage extends StatelessWidget {
                   "SELF-HOSTED INFRASTRUCTURE PROJECT",
                   style: GoogleFonts.robotoMono(
                     color: AppColors.green,
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Spacer(),
-              Icon(Icons.dns_outlined, color: AppColors.green, size: 18),
-              const SizedBox(width: 6),
-              Text(
-                "PERSONAL HOME SERVER",
-                style: GoogleFonts.robotoMono(
-                  color: AppColors.green,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.dns_outlined, color: AppColors.green, size: 16),
+                  const SizedBox(width: 6),
+                  Text(
+                    "PERSONAL HOME SERVER",
+                    style: GoogleFonts.robotoMono(
+                      color: AppColors.green,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -251,7 +260,7 @@ class DevOpsPage extends StatelessWidget {
 
           // Workflow OS Note
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.03),
               borderRadius: BorderRadius.circular(8),
@@ -288,7 +297,7 @@ class DevOpsPage extends StatelessWidget {
     ];
 
     return Container(
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
+      padding: EdgeInsets.all(isMobile ? 16 : 32),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(20),
@@ -297,7 +306,11 @@ class DevOpsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -310,21 +323,25 @@ class DevOpsPage extends StatelessWidget {
                   "PORTFOLIO CI/CD ARCHITECTURE",
                   style: GoogleFonts.robotoMono(
                     color: AppColors.green,
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Spacer(),
-              Icon(Icons.check_circle_outline, color: AppColors.green, size: 18),
-              const SizedBox(width: 6),
-              Text(
-                "DEPLOYED & LIVE",
-                style: GoogleFonts.robotoMono(
-                  color: AppColors.green,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle_outline, color: AppColors.green, size: 16),
+                  const SizedBox(width: 6),
+                  Text(
+                    "DEPLOYED & LIVE",
+                    style: GoogleFonts.robotoMono(
+                      color: AppColors.green,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -345,7 +362,7 @@ class DevOpsPage extends StatelessWidget {
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
           // Pipeline Visualization Diagram
           isMobile
@@ -398,7 +415,7 @@ class _DiagramNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: const Color(0xFF0D1117),
         borderRadius: BorderRadius.circular(6),
@@ -408,7 +425,7 @@ class _DiagramNode extends StatelessWidget {
         label,
         style: GoogleFonts.robotoMono(
           color: Colors.white,
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -436,7 +453,7 @@ class _JourneyCardState extends State<_JourneyCard> {
       onExit: (_) => setState(() => isHovered = false),
       child: AnimatedContainer(
         duration: 200.ms,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isHovered
               ? t.statusColor.withValues(alpha: 0.05)
@@ -452,26 +469,29 @@ class _JourneyCardState extends State<_JourneyCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: t.statusColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(t.icon, color: t.statusColor, size: 24),
+              child: Icon(t.icon, color: t.statusColor, size: 20),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAlignment: WrapCrossAlignment.center,
+                    spacing: 8,
+                    runSpacing: 4,
                     children: [
                       Text(
                         t.title,
                         style: GoogleFonts.syne(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -487,7 +507,7 @@ class _JourneyCardState extends State<_JourneyCard> {
                           t.statusLabel,
                           style: GoogleFonts.robotoMono(
                             color: t.statusColor,
-                            fontSize: 10,
+                            fontSize: 9,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -502,16 +522,16 @@ class _JourneyCardState extends State<_JourneyCard> {
                       fontSize: 11,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Text(
                     t.description,
                     style: GoogleFonts.outfit(
                       color: AppColors.textSecondary,
-                      fontSize: 14,
+                      fontSize: 13,
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 12),
                   Wrap(
                     spacing: 6,
                     runSpacing: 6,
@@ -522,7 +542,7 @@ class _JourneyCardState extends State<_JourneyCard> {
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.04),
                                 borderRadius: BorderRadius.circular(4),
-                                border: Border.all(color: Colors.white12),
+                                border: Border.all(color: Colors.white10),
                               ),
                               child: Text(
                                 c,

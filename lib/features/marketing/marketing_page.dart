@@ -13,6 +13,7 @@ class MarketingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     final experience = MarketingData.enlightenExperience;
     final pillars = MarketingData.pillars;
     final archiveItems = MarketingData.archivePlaceholders;
@@ -20,8 +21,8 @@ class MarketingPage extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 60,
-        vertical: isMobile ? 30 : 60,
+        horizontal: isMobile ? 16 : 60,
+        vertical: isMobile ? 24 : 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +31,7 @@ class MarketingPage extends StatelessWidget {
             "GROW // DIGITAL MARKETING",
             style: GoogleFonts.robotoMono(
               color: AppColors.purple,
-              fontSize: 13,
+              fontSize: 12,
               letterSpacing: 3,
               fontWeight: FontWeight.bold,
             ),
@@ -39,7 +40,7 @@ class MarketingPage extends StatelessWidget {
           Text(
             "CREATIVE, CONTENT & CAMPAIGNS",
             style: GoogleFonts.syne(
-              fontSize: isMobile ? 28 : 42,
+              fontSize: screenWidth < 360 ? 24 : (isMobile ? 28 : 42),
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: -1,
@@ -50,15 +51,15 @@ class MarketingPage extends StatelessWidget {
             "Graphic design, short-form video editing, Meta paid ads, social media management, email/SMS campaigns, and KPI analytics.",
             style: GoogleFonts.outfit(
               color: AppColors.textSecondary,
-              fontSize: 16,
+              fontSize: screenWidth < 360 ? 14 : 16,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 36),
 
           // 1. PROFESSIONAL EXPERIENCE CARD
           _buildProfessionalExperienceCard(context, experience, isMobile),
 
-          const SizedBox(height: 50),
+          const SizedBox(height: 40),
 
           // 2. VISUAL GROWTH PIPELINE: CREATE -> PUBLISH -> PROMOTE -> MEASURE
           Text(
@@ -88,9 +89,9 @@ class MarketingPage extends StatelessWidget {
               : GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1.15,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: screenWidth < 900 ? 2 : 3,
+                    childAspectRatio: screenWidth < 900 ? 1.3 : 1.15,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                   ),
@@ -99,11 +100,14 @@ class MarketingPage extends StatelessWidget {
                       _PillarCard(pillar: pillars[index]),
                 ),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
 
           // 4. CREATIVE ARCHIVE / MARKETING GALLERY STRUCTURE
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
             children: [
               Text(
                 "CREATIVE ARCHIVE & GALLERY",
@@ -135,7 +139,7 @@ class MarketingPage extends StatelessWidget {
 
           _buildCreativeArchiveSection(context, archiveItems, isMobile),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
         ],
       ),
     );
@@ -144,7 +148,7 @@ class MarketingPage extends StatelessWidget {
   Widget _buildProfessionalExperienceCard(
       BuildContext context, ProfessionalExperienceModel exp, bool isMobile) {
     return Container(
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
+      padding: EdgeInsets.all(isMobile ? 16 : 32),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(20),
@@ -160,7 +164,11 @@ class MarketingPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -173,12 +181,11 @@ class MarketingPage extends StatelessWidget {
                   "PROFESSIONAL EXPERIENCE",
                   style: GoogleFonts.robotoMono(
                     color: AppColors.purple,
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Spacer(),
               Text(
                 exp.period,
                 style: GoogleFonts.robotoMono(
@@ -215,14 +222,14 @@ class MarketingPage extends StatelessWidget {
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
           // Capabilities Breakdown Grid
           isMobile
               ? Column(
                   children: exp.capabilities.entries.map((entry) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.only(bottom: 14),
                       child: _CapabilityBlock(
                         title: entry.key,
                         items: entry.value,
@@ -230,18 +237,23 @@ class MarketingPage extends StatelessWidget {
                     );
                   }).toList(),
                 )
-              : Wrap(
-                  spacing: 20,
-                  runSpacing: 20,
-                  children: exp.capabilities.entries.map((entry) {
-                    return SizedBox(
-                      width: (MediaQuery.of(context).size.width - 200) / 3,
-                      child: _CapabilityBlock(
-                        title: entry.key,
-                        items: entry.value,
-                      ),
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    final itemWidth = (constraints.maxWidth - 40) / 3;
+                    return Wrap(
+                      spacing: 20,
+                      runSpacing: 20,
+                      children: exp.capabilities.entries.map((entry) {
+                        return SizedBox(
+                          width: itemWidth,
+                          child: _CapabilityBlock(
+                            title: entry.key,
+                            items: entry.value,
+                          ),
+                        );
+                      }).toList(),
                     );
-                  }).toList(),
+                  },
                 ),
         ],
       ),
@@ -252,7 +264,7 @@ class MarketingPage extends StatelessWidget {
     final stages = ["CREATE", "PUBLISH", "PROMOTE", "MEASURE"];
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFF0D1117),
         borderRadius: BorderRadius.circular(10),
@@ -291,7 +303,7 @@ class MarketingPage extends StatelessWidget {
                     ),
                     if (index < stages.length - 1)
                       Padding(
-                        padding: const EdgeInsets.only(left: 30),
+                        padding: const EdgeInsets.only(left: 20),
                         child: Icon(Icons.arrow_forward_rounded,
                             color: AppColors.purple.withValues(alpha: 0.5), size: 16),
                       ),
@@ -305,7 +317,7 @@ class MarketingPage extends StatelessWidget {
   Widget _buildCreativeArchiveSection(BuildContext context,
       List<CreativeArchiveItem> items, bool isMobile) {
     return Container(
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
+      padding: EdgeInsets.all(isMobile ? 16 : 28),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(20),
@@ -337,17 +349,17 @@ class MarketingPage extends StatelessWidget {
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            separatorBuilder: (c, i) => const SizedBox(height: 16),
+            separatorBuilder: (c, i) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final item = items[index];
               return Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.02),
                   borderRadius: BorderRadius.circular(10),
@@ -356,8 +368,8 @@ class MarketingPage extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      width: 44,
-                      height: 44,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
                         color: AppColors.purple.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
@@ -369,15 +381,17 @@ class MarketingPage extends StatelessWidget {
                                 ? Icons.campaign_outlined
                                 : Icons.image_outlined,
                         color: AppColors.purple,
-                        size: 22,
+                        size: 20,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
                             children: [
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -395,7 +409,6 @@ class MarketingPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
                               Text(
                                 item.tool,
                                 style: GoogleFonts.robotoMono(
@@ -405,12 +418,12 @@ class MarketingPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 4),
                           Text(
                             item.title,
                             style: GoogleFonts.syne(
                               color: Colors.white,
-                              fontSize: 15,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -454,9 +467,9 @@ class _CapabilityBlock extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         ...items.map((i) => Padding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: const EdgeInsets.only(bottom: 3),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -498,7 +511,7 @@ class _PillarCardState extends State<_PillarCard> {
       onExit: (_) => setState(() => isHovered = false),
       child: AnimatedContainer(
         duration: 200.ms,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isHovered
               ? AppColors.purple.withValues(alpha: 0.08)
@@ -521,14 +534,14 @@ class _PillarCardState extends State<_PillarCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: AppColors.purple.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(p.icon,
                           color: isHovered ? AppColors.purple : Colors.white70,
-                          size: 20),
+                          size: 18),
                     ),
                     Text(
                       p.stageLabel,
@@ -540,16 +553,16 @@ class _PillarCardState extends State<_PillarCard> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Text(
                   p.title,
                   style: GoogleFonts.syne(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   p.subtitle,
                   style: GoogleFonts.outfit(
@@ -559,7 +572,7 @@ class _PillarCardState extends State<_PillarCard> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Wrap(
               spacing: 4,
               runSpacing: 4,

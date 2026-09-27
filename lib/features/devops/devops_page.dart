@@ -113,7 +113,7 @@ class DevOpsPage extends StatelessWidget {
         children: [
           Wrap(
             alignment: WrapAlignment.spaceBetween,
-            crossAlignment: WrapCrossAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
             spacing: 12,
             runSpacing: 8,
             children: [
@@ -308,7 +308,7 @@ class DevOpsPage extends StatelessWidget {
         children: [
           Wrap(
             alignment: WrapAlignment.spaceBetween,
-            crossAlignment: WrapCrossAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
             spacing: 12,
             runSpacing: 8,
             children: [
@@ -483,7 +483,7 @@ class _JourneyCardState extends State<_JourneyCard> {
                 children: [
                   Wrap(
                     alignment: WrapAlignment.spaceBetween,
-                    crossAlignment: WrapCrossAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     spacing: 8,
                     runSpacing: 4,
                     children: [

@@ -26,7 +26,7 @@ class DevOpsData {
       "Media Streaming",
     ],
     workflowNote:
-        "Primary development and server operations are performed on Linux (Manjaro). Windows is maintained in dual-boot for marketing tool compatibility.",
+        "Primary development and server operations are performed on Linux (Arch Linux). Windows is maintained in dual-boot for marketing tool compatibility.",
   );
 
   static const List<DevOpsTopic> topics = [
@@ -35,10 +35,10 @@ class DevOpsData {
       category: "Primary Operating System",
       status: DevOpsStatus.active,
       description:
-          "Daily driver setup on Manjaro Linux for software development and server self-hosting. Utilizes Windows as a secondary environment for specific marketing software tools.",
+          "Daily driver setup on Arch Linux for software development and server self-hosting. Utilizes Windows as a secondary environment for specific marketing software tools.",
       icon: Icons.terminal_rounded,
       keyConcepts: [
-        "Primary Linux (Manjaro)",
+        "Primary Linux (Arch)",
         "Secondary Windows Setup",
         "Bash Scripting",
         "Systemd Services",

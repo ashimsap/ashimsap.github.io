@@ -19,8 +19,8 @@ class LabData {
       category: "Networking / Automation",
       status: LabStatus.completed,
       description:
-          "Developed a bidirectional WebSocket bridge allowing a Flutter mobile app to act as a custom hardware Stream Deck for controlling Manjaro Linux shortcuts.",
-      technologies: ["WebSocket", "Linux Shell", "Dart", "Manjaro"],
+          "Developed a bidirectional WebSocket bridge allowing a Flutter mobile app to act as a custom hardware Stream Deck for controlling Arch Linux shortcuts.",
+      technologies: ["WebSocket", "Linux Shell", "Dart", "Arch Linux"],
       link: "https://github.com/ashimsap/deck",
       date: "2025-11",
       accentColor: Color(0xFF7000FF),

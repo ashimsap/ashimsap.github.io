@@ -332,7 +332,7 @@ class HomePage extends ConsumerWidget {
               // 2. F1Soft International
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
-                crossAlignment: WrapCrossAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 12,
                 runSpacing: 4,
                 children: [

@@ -14,13 +14,14 @@ class LabPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     final items = LabData.items;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 60,
-        vertical: isMobile ? 30 : 60,
+        horizontal: isMobile ? 16 : 60,
+        vertical: isMobile ? 24 : 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +30,7 @@ class LabPage extends StatelessWidget {
             "LAB // EXPERIMENTS & PROTOTYPES",
             style: GoogleFonts.robotoMono(
               color: AppColors.amber,
-              fontSize: 13,
+              fontSize: 12,
               letterSpacing: 3,
               fontWeight: FontWeight.bold,
             ),
@@ -38,7 +39,7 @@ class LabPage extends StatelessWidget {
           Text(
             "SANDBOX & UNFINISHED IDEAS",
             style: GoogleFonts.syne(
-              fontSize: isMobile ? 28 : 42,
+              fontSize: screenWidth < 360 ? 24 : (isMobile ? 28 : 42),
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: -1,
@@ -49,22 +50,22 @@ class LabPage extends StatelessWidget {
             "A dedicated workspace for technical experiments, UI canvas explorations, networking bridges, and early-stage prototypes.",
             style: GoogleFonts.outfit(
               color: AppColors.textSecondary,
-              fontSize: 16,
+              fontSize: screenWidth < 360 ? 14 : 16,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 36),
 
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            separatorBuilder: (c, i) => const SizedBox(height: 20),
+            separatorBuilder: (c, i) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               return _LabCard(item: items[index]);
             },
           ),
 
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
         ],
       ),
     );
@@ -91,7 +92,7 @@ class _LabCardState extends State<_LabCard> {
       onExit: (_) => setState(() => isHovered = false),
       child: AnimatedContainer(
         duration: 200.ms,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isHovered
               ? item.statusColor.withValues(alpha: 0.05)
@@ -106,62 +107,70 @@ class _LabCardState extends State<_LabCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAlignment: WrapCrossAlignment.center,
+              spacing: 12,
+              runSpacing: 6,
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: item.statusColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: item.statusColor),
-                  ),
-                  child: Text(
-                    item.statusLabel,
-                    style: GoogleFonts.robotoMono(
-                      color: item.statusColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: item.statusColor.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: item.statusColor),
+                      ),
+                      child: Text(
+                        item.statusLabel,
+                        style: GoogleFonts.robotoMono(
+                          color: item.statusColor,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    Text(
+                      item.category,
+                      style: GoogleFonts.robotoMono(
+                        color: AppColors.textMuted,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  item.category,
-                  style: GoogleFonts.robotoMono(
-                    color: AppColors.textMuted,
-                    fontSize: 11,
-                  ),
-                ),
-                const Spacer(),
                 Text(
                   item.date,
                   style: GoogleFonts.robotoMono(
                     color: AppColors.textMuted,
-                    fontSize: 11,
+                    fontSize: 10,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Text(
               item.title,
               style: GoogleFonts.syne(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               item.description,
               style: GoogleFonts.outfit(
                 color: AppColors.textSecondary,
-                fontSize: 14,
+                fontSize: 13,
                 height: 1.5,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             Row(
               children: [
                 Expanded(

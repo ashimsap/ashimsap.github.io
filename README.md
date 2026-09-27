@@ -1,16 +1,28 @@
-# portfolio
+# Ashim Sapkota
 
-A new Flutter project.
+> **Flutter Developer & Architect** building modern, responsive cross-platform web and mobile experiences.
 
-## Getting Started
+🌐 **Live Website:** [ashimsap.github.io](https://ashimsap.github.io)
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## ⚡ Quick Start
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Click Here To Open The Portfolio](build/web/index.html)
+```bash
+# Clone the repository
+git clone https://github.com/ashimsap/ashimsap.github.io.git
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Install dependencies
+flutter pub get
+
+# Run locally in Chrome
+flutter run -d chrome
+```
+
+---
+
+## 🛠️ Built With
+
+- **Framework:** [Flutter](https://flutter.dev) (Web)
+- **State Management:** [Riverpod](https://riverpod.dev)
+- **Animations:** [Flutter Animate](https://pub.dev/packages/flutter_animate)

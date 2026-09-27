@@ -22,29 +22,29 @@ class CustomSideNavRail extends ConsumerWidget {
     ];
 
     return Container(
-      width: 100,
+      width: 90,
       decoration: const BoxDecoration(
         border: Border(right: BorderSide(color: AppColors.border, width: 1)),
       ),
       child: Column(
         children: [
-          const SizedBox(height: 30),
+          const SizedBox(height: 24),
           // Brand Monogram
           Text(
             "AS",
             style: GoogleFonts.syne(
               color: AppColors.cyan,
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.w900,
               letterSpacing: 2,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 30),
 
           Expanded(
             child: ListView.separated(
               itemCount: navItems.length,
-              separatorBuilder: (c, i) => const SizedBox(height: 24),
+              separatorBuilder: (c, i) => const SizedBox(height: 20),
               itemBuilder: (context, index) {
                 final item = navItems[index];
                 final isSelected = selectedIndex == index;
@@ -65,13 +65,13 @@ class CustomSideNavRail extends ConsumerWidget {
             tooltip: "GitHub",
             url: "https://github.com/ashimsap",
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           _SocialIconButton(
             icon: Icons.work_outline,
             tooltip: "LinkedIn",
             url: "https://www.linkedin.com/in/ashim-sapkota-7792552a4/",
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -84,6 +84,7 @@ class CustomBottomNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(navigationIndexProvider);
+    final screenWidth = MediaQuery.of(context).size.width;
 
     final navItems = [
       _NavItemData(icon: Icons.grid_view_rounded, label: "HOME", color: AppColors.cyan),
@@ -93,12 +94,15 @@ class CustomBottomNavBar extends ConsumerWidget {
       _NavItemData(icon: Icons.science_rounded, label: "LAB", color: AppColors.amber),
     ];
 
+    final itemPadding = screenWidth < 360 ? 4.0 : 8.0;
+    final fontSize = screenWidth < 360 ? 9.0 : 10.0;
+
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xF00A0A0A),
         border: Border(top: BorderSide(color: AppColors.border, width: 1)),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: SafeArea(
         top: false,
         child: Row(
@@ -112,27 +116,27 @@ class CustomBottomNavBar extends ConsumerWidget {
                   ref.read(navigationIndexProvider.notifier).state = index,
               child: AnimatedContainer(
                 duration: 200.ms,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: EdgeInsets.symmetric(
+                    horizontal: itemPadding, vertical: 5),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? item.color.withValues(alpha: 0.15)
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       item.icon,
-                      size: 20,
+                      size: 18,
                       color: isSelected ? item.color : Colors.white38,
                     ),
                     const SizedBox(height: 2),
                     Text(
                       item.label,
                       style: GoogleFonts.robotoMono(
-                        fontSize: 10,
+                        fontSize: fontSize,
                         color: isSelected ? item.color : Colors.white38,
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.normal,
@@ -182,7 +186,7 @@ class _SideNavItemState extends State<_SideNavItem> {
           onTap: widget.onTap,
           child: AnimatedContainer(
             duration: 200.ms,
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               border: Border(
                 right: BorderSide(
@@ -202,7 +206,7 @@ class _SideNavItemState extends State<_SideNavItem> {
                   color: widget.isSelected
                       ? color
                       : (isHovered ? Colors.white70 : Colors.white24),
-                  size: 24,
+                  size: 22,
                 ),
                 const SizedBox(height: 4),
                 Text(

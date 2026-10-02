@@ -3,6 +3,7 @@ import '../../core/responsive/responsive_layout.dart';
 import 'data/marketing_data.dart';
 import 'widgets/creative_gallery.dart';
 import 'widgets/experience_card.dart';
+import 'widgets/graphics_slider_showcase.dart';
 import 'widgets/grow_hero.dart';
 import 'widgets/marketing_capabilities.dart';
 import 'widgets/marketing_workflow.dart';
@@ -14,6 +15,7 @@ class MarketingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     final experience = MarketingData.enlightenExperience;
     final pillars = MarketingData.pillars;
     final archiveItems = MarketingData.archiveItems;
@@ -34,8 +36,23 @@ class MarketingPage extends StatelessWidget {
 
             const SizedBox(height: 40),
 
-            // 2. RAW VS COLOR GRADED VIDEO SHOWCASE & SLIDER
-            const VideoComparisonPlayer(),
+            // 2. MEDIA SHOWCASE ROW (Color Grading Video + Graphics Auto-Slider)
+            screenWidth >= 900
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Expanded(child: VideoComparisonPlayer()),
+                      SizedBox(width: 24),
+                      Expanded(child: GraphicsSliderShowcase()),
+                    ],
+                  )
+                : Column(
+                    children: const [
+                      VideoComparisonPlayer(),
+                      SizedBox(height: 24),
+                      GraphicsSliderShowcase(),
+                    ],
+                  ),
 
             const SizedBox(height: 40),
 

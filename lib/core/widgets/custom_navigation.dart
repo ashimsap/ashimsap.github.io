@@ -12,32 +12,43 @@ class CustomSideNavRail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(navigationIndexProvider);
+    final isLight = selectedIndex == 2; // GROW section is Light Theme
 
     final navItems = [
       _NavItemData(icon: Icons.grid_view_rounded, label: "HOME", color: AppColors.cyan),
       _NavItemData(icon: Icons.code_rounded, label: "BUILD", color: AppColors.cyan),
-      _NavItemData(icon: Icons.trending_up_rounded, label: "GROW", color: AppColors.purple),
+      _NavItemData(icon: Icons.trending_up_rounded, label: "GROW", color: const Color(0xFF7C3AED)),
       _NavItemData(icon: Icons.terminal_rounded, label: "OPERATE", color: AppColors.green),
       _NavItemData(icon: Icons.science_rounded, label: "LAB", color: AppColors.amber),
     ];
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOutCubic,
       width: 90,
-      decoration: const BoxDecoration(
-        border: Border(right: BorderSide(color: AppColors.border, width: 1)),
+      decoration: BoxDecoration(
+        color: isLight ? const Color(0xF8FFFFFF) : Colors.transparent,
+        border: Border(
+          right: BorderSide(
+            color: isLight ? const Color(0xFFE2E8F0) : AppColors.border,
+            width: 1,
+          ),
+        ),
       ),
       child: Column(
         children: [
           const SizedBox(height: 24),
           // Brand Monogram
-          Text(
-            "AS",
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOutCubic,
             style: GoogleFonts.syne(
-              color: AppColors.cyan,
+              color: isLight ? const Color(0xFF7C3AED) : AppColors.cyan,
               fontSize: 22,
               fontWeight: FontWeight.w900,
               letterSpacing: 2,
             ),
+            child: const Text("AS"),
           ),
           const SizedBox(height: 30),
 
@@ -52,6 +63,7 @@ class CustomSideNavRail extends ConsumerWidget {
                 return _SideNavItem(
                   data: item,
                   isSelected: isSelected,
+                  isLight: isLight,
                   onTap: () =>
                       ref.read(navigationIndexProvider.notifier).state = index,
                 );
@@ -64,12 +76,14 @@ class CustomSideNavRail extends ConsumerWidget {
             icon: Icons.code,
             tooltip: "GitHub",
             url: "https://github.com/ashimsap",
+            isLight: isLight,
           ),
           const SizedBox(height: 8),
           _SocialIconButton(
             icon: Icons.work_outline,
             tooltip: "LinkedIn",
             url: "https://www.linkedin.com/in/ashim-sapkota-7792552a4/",
+            isLight: isLight,
           ),
           const SizedBox(height: 20),
         ],
@@ -85,11 +99,12 @@ class CustomBottomNavBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(navigationIndexProvider);
     final screenWidth = MediaQuery.of(context).size.width;
+    final isLight = selectedIndex == 2; // GROW section is Light Theme
 
     final navItems = [
       _NavItemData(icon: Icons.grid_view_rounded, label: "HOME", color: AppColors.cyan),
       _NavItemData(icon: Icons.code_rounded, label: "BUILD", color: AppColors.cyan),
-      _NavItemData(icon: Icons.trending_up_rounded, label: "GROW", color: AppColors.purple),
+      _NavItemData(icon: Icons.trending_up_rounded, label: "GROW", color: const Color(0xFF7C3AED)),
       _NavItemData(icon: Icons.terminal_rounded, label: "OPERATE", color: AppColors.green),
       _NavItemData(icon: Icons.science_rounded, label: "LAB", color: AppColors.amber),
     ];
@@ -97,10 +112,26 @@ class CustomBottomNavBar extends ConsumerWidget {
     final itemPadding = screenWidth < 360 ? 4.0 : 8.0;
     final fontSize = screenWidth < 360 ? 9.0 : 10.0;
 
-    return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xF00A0A0A),
-        border: Border(top: BorderSide(color: AppColors.border, width: 1)),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOutCubic,
+      decoration: BoxDecoration(
+        color: isLight ? const Color(0xF8FFFFFF) : const Color(0xF00A0A0A),
+        border: Border(
+          top: BorderSide(
+            color: isLight ? const Color(0xFFE2E8F0) : AppColors.border,
+            width: 1,
+          ),
+        ),
+        boxShadow: isLight
+            ? const [
+                BoxShadow(
+                  color: Color(0x0F000000),
+                  blurRadius: 10,
+                  offset: Offset(0, -2),
+                )
+              ]
+            : [],
       ),
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: SafeArea(
@@ -111,17 +142,25 @@ class CustomBottomNavBar extends ConsumerWidget {
             final item = navItems[index];
             final isSelected = selectedIndex == index;
 
+            final itemColor = isSelected
+                ? item.color
+                : (isLight ? const Color(0xFF64748B) : Colors.white38);
+
+            final bgColor = isSelected
+                ? (isLight
+                    ? const Color(0xFFF3E8FF)
+                    : item.color.withValues(alpha: 0.15))
+                : Colors.transparent;
+
             return GestureDetector(
               onTap: () =>
                   ref.read(navigationIndexProvider.notifier).state = index,
               child: AnimatedContainer(
-                duration: 200.ms,
+                duration: 300.ms,
                 padding: EdgeInsets.symmetric(
                     horizontal: itemPadding, vertical: 5),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? item.color.withValues(alpha: 0.15)
-                      : Colors.transparent,
+                  color: bgColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -130,14 +169,14 @@ class CustomBottomNavBar extends ConsumerWidget {
                     Icon(
                       item.icon,
                       size: 18,
-                      color: isSelected ? item.color : Colors.white38,
+                      color: itemColor,
                     ),
                     const SizedBox(height: 2),
                     Text(
                       item.label,
                       style: GoogleFonts.robotoMono(
                         fontSize: fontSize,
-                        color: isSelected ? item.color : Colors.white38,
+                        color: itemColor,
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
@@ -156,11 +195,13 @@ class CustomBottomNavBar extends ConsumerWidget {
 class _SideNavItem extends StatefulWidget {
   final _NavItemData data;
   final bool isSelected;
+  final bool isLight;
   final VoidCallback onTap;
 
   const _SideNavItem({
     required this.data,
     required this.isSelected,
+    required this.isLight,
     required this.onTap,
   });
 
@@ -175,6 +216,16 @@ class _SideNavItemState extends State<_SideNavItem> {
   Widget build(BuildContext context) {
     final color = widget.data.color;
 
+    final unselectedColor = widget.isLight
+        ? (isHovered ? const Color(0xFF1E293B) : const Color(0xFF64748B))
+        : (isHovered ? Colors.white70 : Colors.white24);
+
+    final displayColor = widget.isSelected ? color : unselectedColor;
+
+    final hoverBg = widget.isLight
+        ? const Color(0xFFF3E8FF)
+        : color.withValues(alpha: 0.08);
+
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
@@ -185,7 +236,7 @@ class _SideNavItemState extends State<_SideNavItem> {
         child: GestureDetector(
           onTap: widget.onTap,
           child: AnimatedContainer(
-            duration: 200.ms,
+            duration: 300.ms,
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               border: Border(
@@ -194,27 +245,21 @@ class _SideNavItemState extends State<_SideNavItem> {
                   width: 3,
                 ),
               ),
-              color: isHovered
-                  ? color.withValues(alpha: 0.08)
-                  : Colors.transparent,
+              color: isHovered ? hoverBg : Colors.transparent,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
                   widget.data.icon,
-                  color: widget.isSelected
-                      ? color
-                      : (isHovered ? Colors.white70 : Colors.white24),
+                  color: displayColor,
                   size: 22,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   widget.data.label,
                   style: GoogleFonts.robotoMono(
-                    color: widget.isSelected
-                        ? color
-                        : (isHovered ? Colors.white70 : Colors.white24),
+                    color: displayColor,
                     fontSize: 9,
                     fontWeight: widget.isSelected
                         ? FontWeight.bold
@@ -235,21 +280,28 @@ class _SocialIconButton extends StatelessWidget {
   final IconData icon;
   final String tooltip;
   final String url;
+  final bool isLight;
 
   const _SocialIconButton({
     required this.icon,
     required this.tooltip,
     required this.url,
+    required this.isLight,
   });
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = isLight ? const Color(0xFF64748B) : Colors.white38;
+    final hoverBg = isLight
+        ? const Color(0xFFF3E8FF)
+        : AppColors.cyan.withValues(alpha: 0.1);
+
     return Tooltip(
       message: tooltip,
       child: IconButton(
-        icon: Icon(icon, color: Colors.white38, size: 18),
+        icon: Icon(icon, color: iconColor, size: 18),
         onPressed: () => launchUrl(Uri.parse(url)),
-        hoverColor: AppColors.cyan.withValues(alpha: 0.1),
+        hoverColor: hoverBg,
       ),
     );
   }

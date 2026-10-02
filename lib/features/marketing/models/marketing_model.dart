@@ -4,13 +4,9 @@ enum GrowthStage { create, publish, promote, measure }
 
 enum CreativeCategory {
   graphics,
-  socialPosts,
-  reels,
-  videoEditing,
-  colorGrading,
-  metaAds,
-  email,
-  sms,
+  social,
+  campaigns,
+  visualContent,
 }
 
 class ProfessionalExperienceModel {
@@ -31,7 +27,7 @@ class ProfessionalExperienceModel {
 
 class MarketingPillar {
   final String title;
-  final String categoryCode; // e.g. "DESIGN", "VIDEO", "SOCIAL", "PAID", "CAMPAIGNS", "ANALYTICS"
+  final String categoryCode; // "DESIGN", "VIDEO", "SOCIAL", "PAID", "CAMPAIGNS", "ANALYTICS"
   final GrowthStage stage;
   final String subtitle;
   final IconData icon;
@@ -68,8 +64,7 @@ class CreativeArchiveItem {
   final String date;
   final String contextCampaign;
   final String role;
-  final String? previewAsset;
-  final String? kpiResults;
+  final String? imageAssetPath;
 
   const CreativeArchiveItem({
     required this.id,
@@ -79,28 +74,19 @@ class CreativeArchiveItem {
     required this.date,
     required this.contextCampaign,
     required this.role,
-    this.previewAsset,
-    this.kpiResults,
+    this.imageAssetPath,
   });
 
   String get categoryLabel {
     switch (category) {
       case CreativeCategory.graphics:
         return "GRAPHICS";
-      case CreativeCategory.socialPosts:
-        return "SOCIAL POST";
-      case CreativeCategory.reels:
-        return "REELS / SHORT VIDEO";
-      case CreativeCategory.videoEditing:
-        return "VIDEO EDITING";
-      case CreativeCategory.colorGrading:
-        return "COLOR GRADING";
-      case CreativeCategory.metaAds:
-        return "META ADS";
-      case CreativeCategory.email:
-        return "EMAIL CAMPAIGN";
-      case CreativeCategory.sms:
-        return "SMS MARKETING";
+      case CreativeCategory.social:
+        return "SOCIAL MEDIA";
+      case CreativeCategory.campaigns:
+        return "CAMPAIGNS";
+      case CreativeCategory.visualContent:
+        return "VISUAL CONTENT";
     }
   }
 }

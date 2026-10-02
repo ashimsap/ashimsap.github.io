@@ -18,6 +18,7 @@ dependencies:
   http: ^1.2.0
   blurbox: ^0.0.4
   cupertino_icons: ^1.0.8
+  video_player: ^2.9.2
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,6 @@ flutter:
      - assets/ss/
      - assets/icons/
      - assets/avatar/
+     - assets/graphics/
+     - assets/video/
+     - assets/image/
